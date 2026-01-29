@@ -21,7 +21,8 @@ export function useSpeech({ onResult, onError }: UseSpeechOptions = {}) {
   });
 
   const recognitionRef = useRef<any>(null);
-  const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
+  const utteranceQueueRef = useRef<SpeechSynthesisUtterance[]>([]);
+  const isSpeakingRef = useRef(false);
 
   // Check browser support on mount
   useEffect(() => {
@@ -68,6 +69,33 @@ export function useSpeech({ onResult, onError }: UseSpeechOptions = {}) {
     };
   }, [onResult, onError]);
 
+  // Process the utterance queue
+  const processQueue = useCallback(() => {
+    if (!window.speechSynthesis || isSpeakingRef.current) return;
+    
+    const nextUtterance = utteranceQueueRef.current.shift();
+    if (!nextUtterance) {
+      setState(prev => ({ ...prev, isSpeaking: false }));
+      return;
+    }
+
+    isSpeakingRef.current = true;
+    setState(prev => ({ ...prev, isSpeaking: true }));
+
+    nextUtterance.onend = () => {
+      isSpeakingRef.current = false;
+      // Process next item in queue
+      processQueue();
+    };
+
+    nextUtterance.onerror = () => {
+      isSpeakingRef.current = false;
+      processQueue();
+    };
+
+    window.speechSynthesis.speak(nextUtterance);
+  }, []);
+
   const startListening = useCallback(() => {
     if (!recognitionRef.current || state.isListening) return;
 
@@ -76,6 +104,8 @@ export function useSpeech({ onResult, onError }: UseSpeechOptions = {}) {
       if (window.speechSynthesis) {
         window.speechSynthesis.cancel();
       }
+      utteranceQueueRef.current = [];
+      isSpeakingRef.current = false;
       setState(prev => ({ ...prev, isSpeaking: false }));
 
       recognitionRef.current.start();
@@ -97,11 +127,21 @@ export function useSpeech({ onResult, onError }: UseSpeechOptions = {}) {
     }
   }, []);
 
-  const speak = useCallback((text: string) => {
+  /**
+   * Speak text with optional interrupt control
+   * @param text - Text to speak
+   * @param shouldInterrupt - If true, cancels current speech and clears queue. 
+   *                          If false, adds to queue (for streaming chunks).
+   */
+  const speak = useCallback((text: string, shouldInterrupt: boolean = true) => {
     if (!window.speechSynthesis || !text) return;
 
-    // Cancel any ongoing speech
-    window.speechSynthesis.cancel();
+    // If interrupting (new user query), cancel everything
+    if (shouldInterrupt) {
+      window.speechSynthesis.cancel();
+      utteranceQueueRef.current = [];
+      isSpeakingRef.current = false;
+    }
 
     const utterance = new SpeechSynthesisUtterance(text);
     utterance.rate = 1.0;
@@ -120,25 +160,20 @@ export function useSpeech({ onResult, onError }: UseSpeechOptions = {}) {
       utterance.voice = preferredVoice;
     }
 
-    utterance.onstart = () => {
-      setState(prev => ({ ...prev, isSpeaking: true }));
-    };
-
-    utterance.onend = () => {
-      setState(prev => ({ ...prev, isSpeaking: false }));
-    };
-
-    utterance.onerror = () => {
-      setState(prev => ({ ...prev, isSpeaking: false }));
-    };
-
-    utteranceRef.current = utterance;
-    window.speechSynthesis.speak(utterance);
-  }, []);
+    // Add to queue
+    utteranceQueueRef.current.push(utterance);
+    
+    // Start processing if not already speaking
+    if (!isSpeakingRef.current) {
+      processQueue();
+    }
+  }, [processQueue]);
 
   const stopSpeaking = useCallback(() => {
     if (window.speechSynthesis) {
       window.speechSynthesis.cancel();
+      utteranceQueueRef.current = [];
+      isSpeakingRef.current = false;
       setState(prev => ({ ...prev, isSpeaking: false }));
     }
   }, []);
