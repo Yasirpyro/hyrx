@@ -27,8 +27,8 @@ HYRX is an AI studio specializing in end-to-end AI systems for businesses. We bu
 - Ongoing optimization and support
 
 ## Budget Guidance
-- Small projects (simple chatbot, basic automation): Starting from $5,000
-- Medium projects (custom agent, multi-system integration): $10,000 - $30,000
+- Small projects (simple chatbot, basic automation): Starting from $1,000
+- Medium projects (custom agent, multi-system integration): $5,000 - $30,000
 - Enterprise solutions (complex multi-agent systems): Custom pricing
 
 ## Timeline Guidance
