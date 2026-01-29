@@ -168,7 +168,7 @@ export default function Contact() {
             </Reveal>
             <Reveal delay={0.2}>
               <p className="text-body-lg">
-                Tell us about your project and we'll get back to you with a detailed proposal within 1-2 business days.
+                Tell us about your project and we'll get back to you ASAP with a detailed proposal.
               </p>
             </Reveal>
           </div>
@@ -216,9 +216,9 @@ export default function Contact() {
             
             <Reveal delay={0.3}>
               <div className="mt-10 p-6 rounded-xl bg-card border border-border/50">
-                <h3 className="font-medium text-foreground mb-2">Response time</h3>
+                <h3 className="font-medium text-foreground mb-2">Quick response</h3>
                 <p className="text-sm text-muted-foreground">
-                  We typically respond within 1-2 business days. For urgent inquiries, please mention it in your message.
+                  We'll respond to you ASAP. For urgent projects, just let us know in your message.
                 </p>
               </div>
             </Reveal>
