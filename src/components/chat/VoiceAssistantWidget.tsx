@@ -20,6 +20,8 @@ import { VoiceOrbModal } from "./VoiceOrbModal";
 import { useReducedMotion } from "@/hooks/use-reduced-motion";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useFooterCollision } from "@/hooks/use-footer-collision";
+import { useSpeech } from "@/hooks/use-speech";
+import { streamChat, type ChatMessage as StreamMessage } from "@/lib/stream-chat";
 import { cn } from "@/lib/utils";
 
 interface Message {
@@ -56,14 +58,8 @@ export const VoiceAssistantWidget = memo(function VoiceAssistantWidget() {
   const isMobile = useIsMobile();
   const { liftAmount, buttonRef } = useFooterCollision();
 
-  // Check for TTS support
-  const isTTSSupported = typeof window !== 'undefined' && 'speechSynthesis' in window;
-  
-  // Check for voice input support
-  const isVoiceSupported = typeof window !== 'undefined' && (
-    'SpeechRecognition' in window || 
-    'webkitSpeechRecognition' in window
-  );
+  // Use the speech hook with queue support
+  const { speak, stopSpeaking, isTTSSupported, isSupported: isVoiceSupported } = useSpeech();
 
   // Scroll to bottom when messages change
   useEffect(() => {
@@ -79,30 +75,6 @@ export const VoiceAssistantWidget = memo(function VoiceAssistantWidget() {
     }
   }, [isOpen]);
 
-  const speak = useCallback((text: string) => {
-    if (!window.speechSynthesis || !text || !voiceEnabled) return;
-
-    window.speechSynthesis.cancel();
-
-    const utterance = new SpeechSynthesisUtterance(text);
-    utterance.rate = 1.0;
-    utterance.pitch = 1.0;
-    utterance.volume = 1.0;
-
-    const voices = window.speechSynthesis.getVoices();
-    const preferredVoice = voices.find(v => 
-      v.name.includes('Google') || 
-      v.name.includes('Samantha') || 
-      v.name.includes('Daniel') ||
-      v.lang.startsWith('en')
-    );
-    if (preferredVoice) {
-      utterance.voice = preferredVoice;
-    }
-
-    window.speechSynthesis.speak(utterance);
-  }, [voiceEnabled]);
-
   const sendMessage = useCallback(async (content: string) => {
     if (!content.trim() || isLoading) return;
 
@@ -117,59 +89,65 @@ export const VoiceAssistantWidget = memo(function VoiceAssistantWidget() {
     setIsLoading(true);
     setError(null);
 
+    // Stop any ongoing speech when user sends a new message
+    if (voiceEnabled) {
+      stopSpeaking();
+    }
+
+    // Build chat history for API (exclude welcome message)
+    const chatHistory: StreamMessage[] = [...messages.filter(m => m.id !== "welcome"), userMessage].map(m => ({
+      role: m.role,
+      content: m.content,
+    }));
+
+    // Accumulator for streaming response
+    let assistantContent = "";
+    const assistantId = `assistant-${Date.now()}`;
+
     try {
-      const response = await fetch(
-        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/hyrx-chat`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
-          },
-          body: JSON.stringify({
-            messages: [...messages.filter(m => m.id !== "welcome"), userMessage].map(m => ({
-              role: m.role,
-              content: m.content,
-            })),
-          }),
-        }
-      );
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error || "Failed to get response");
-      }
-
-      const assistantMessage: Message = {
-        id: `assistant-${Date.now()}`,
-        role: "assistant",
-        content: data.message,
-      };
-
-      setMessages(prev => [...prev, assistantMessage]);
-
-      // Speak the response if voice is enabled
-      if (voiceEnabled && isTTSSupported) {
-        speak(data.message);
-      }
+      await streamChat({
+        messages: chatHistory,
+        onDelta: (delta) => {
+          assistantContent += delta;
+          // Update or create assistant message progressively
+          setMessages(prev => {
+            const last = prev[prev.length - 1];
+            if (last?.id === assistantId) {
+              return prev.map((m, i) =>
+                i === prev.length - 1 ? { ...m, content: assistantContent } : m
+              );
+            }
+            return [...prev, { id: assistantId, role: "assistant", content: assistantContent }];
+          });
+        },
+        onSentence: (sentence) => {
+          // Speak complete sentences for natural TTS (add to queue, don't interrupt)
+          if (voiceEnabled && isTTSSupported) {
+            speak(sentence, false);
+          }
+        },
+        onDone: () => {
+          setIsLoading(false);
+        },
+        onError: (err) => {
+          console.error("Chat error:", err);
+          setError(err.message || "Something went wrong. Please try again.");
+          
+          // Add fallback message
+          const fallbackMessage: Message = {
+            id: `assistant-error-${Date.now()}`,
+            role: "assistant",
+            content: "I'm having trouble connecting right now. You can reach us directly at contact@hyrx.tech or visit our Contact page.",
+          };
+          setMessages(prev => [...prev, fallbackMessage]);
+          setIsLoading(false);
+        },
+      });
     } catch (err) {
-      console.error("Chat error:", err);
-      setError(
-        err instanceof Error ? err.message : "Something went wrong. Please try again."
-      );
-      
-      // Add fallback message
-      const fallbackMessage: Message = {
-        id: `assistant-error-${Date.now()}`,
-        role: "assistant",
-        content: "I'm having trouble connecting right now. You can reach us directly at contact@hyrx.tech or visit our Contact page.",
-      };
-      setMessages(prev => [...prev, fallbackMessage]);
-    } finally {
+      // Error already handled in onError callback
       setIsLoading(false);
     }
-  }, [messages, isLoading, voiceEnabled, isTTSSupported, speak]);
+  }, [messages, isLoading, voiceEnabled, isTTSSupported, speak, stopSpeaking]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();

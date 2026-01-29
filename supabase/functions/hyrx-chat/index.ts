@@ -1,21 +1,11 @@
-import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { z } from "https://deno.land/x/zod@v3.22.4/mod.ts";
+import { SYSTEM_PROMPT } from "./hyrx-knowledge.ts";
 
-// Allowed origins for CORS - restrict to production and development
-const ALLOWED_ORIGINS = [
-  "https://hyrx.tech",
-  "https://www.hyrx.tech",
-  "http://localhost:5173",
-  "http://localhost:8080",
-];
-
-// Get CORS headers with origin validation
-const getCorsHeaders = (origin: string | null): Record<string, string> => {
-  const allowedOrigin = origin && ALLOWED_ORIGINS.includes(origin) ? origin : ALLOWED_ORIGINS[0];
-  return {
-    "Access-Control-Allow-Origin": allowedOrigin,
-    "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
-  };
+// CORS headers - permissive for edge function, origin validated at gateway
+const corsHeaders = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Headers":
+    "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
 };
 
 // Input validation schema for chat messages
@@ -25,118 +15,11 @@ const ChatMessageSchema = z.object({
 });
 
 const ChatRequestSchema = z.object({
-  messages: z.array(ChatMessageSchema).min(1, "At least one message required").max(50, "Too many messages in history"),
+  messages: z.array(ChatMessageSchema).min(1, "At least one message required").max(20, "Too many messages in history"),
+  stream: z.boolean().optional().default(true),
 });
 
-// HYRX Knowledge Base
-const HYRX_KNOWLEDGE = `
-## About HYRX
-HYRX is an AI studio specializing in end-to-end AI systems for businesses. We build:
-- **AI Agents**: Autonomous agents that handle complex workflows, customer interactions, and decision-making
-- **Automations**: Intelligent process automation that connects your tools and data
-- **Chat Systems**: Custom chatbots and conversational AI with RAG (Retrieval-Augmented Generation)
-- **3D/AR Experiences**: Interactive 3D and augmented reality solutions (secondary offering)
-
-## Our Services
-1. **AI Agents**: Custom autonomous agents for sales, support, operations
-2. **AI Chatbots**: Intelligent conversational interfaces with knowledge retrieval
-3. **3D/AR Experiences**: Immersive product visualization and interactive experiences
-
-## Our Process
-1. **Discover**: We learn your goals, constraints, data, and existing systems
-2. **Build**: We design and develop a custom AI solution tailored to your needs
-3. **Validate**: We test, iterate, and refine with real-world scenarios
-4. **Launch & Optimize**: We deploy, monitor, and continuously improve
-
-## Typical Deliverables
-- Discovery documentation and requirements analysis
-- Custom AI model/agent configuration
-- Integration with your existing tools (CRM, databases, APIs)
-- Testing and validation reports
-- Deployment and documentation
-- Ongoing optimization and support
-
-## Budget Guidance
-- Small projects (simple chatbot, basic automation): Starting from $1,000
-- Medium projects (custom agent, multi-system integration): $5,000 - $30,000
-- Enterprise solutions (complex multi-agent systems): Custom pricing
-
-## Timeline Guidance
-- Simple chatbot: 2-4 weeks
-- Custom AI agent: 4-8 weeks
-- Complex multi-system integration: 8-12+ weeks
-
-## Contact Information
-- Website: Contact page at /contact
-- Request a Quote: Available on the website
-- Email: contact@hyrx.tech
-
-## Important Boundaries
-- We do NOT provide legal, medical, or financial advice
-- We do NOT discuss topics unrelated to our services
-- We always recommend consulting domain experts for specialized advice
-`;
-
-const SYSTEM_PROMPT = `You are HYRX Assistant, a helpful AI assistant for HYRX - an AI studio.
-
-${HYRX_KNOWLEDGE}
-
-## Your Behavior Guidelines
-
-### Identity & Tone
-- You are concise, professional, and helpful
-- You use a friendly but business-appropriate tone
-- You never use hype or exaggerated claims
-- Keep responses short (2-4 sentences max unless elaboration is needed)
-
-### Primary Goals
-1. Help visitors understand HYRX services
-2. Guide them to the right service for their needs
-3. Help them contact us or request a quote
-4. Answer questions about our process, timeline, and approach
-
-### Clarifying Questions
-When a visitor has a project idea, ask 1-3 clarifying questions about:
-- Their specific use case or problem
-- Timeline expectations
-- Budget range (if comfortable sharing)
-- Existing systems they want to integrate
-
-### Out-of-Scope Handling
-If asked about topics unrelated to HYRX services (celebrity news, politics, personal advice, coding help, general knowledge, etc.):
-1. Politely acknowledge you can't help with that topic
-2. Explain what you CAN help with (HYRX services, process, quoting)
-3. Offer to help them explore our services or request a quote
-4. Provide the email fallback: contact@hyrx.tech
-
-Example response for out-of-scope:
-"I'm focused on helping with HYRX's AI services and can't assist with that topic. I can help you:
-• Understand our AI agents, automations, and chat systems
-• Explore which service fits your needs
-• Request a quote or learn about our process
-Would you like to explore our services, or shall I help you request a quote?"
-
-### Contact CTAs
-When appropriate, guide users to:
-- Visit the Contact page for inquiries
-- Use the Request a Quote form for project discussions
-- Email contact@hyrx.tech as a backup
-
-### Safety
-- Never request sensitive personal data (SSN, passwords, financial details)
-- Don't make guarantees about specific outcomes
-- Recommend consulting specialists for legal/medical/financial matters
-
-### Response Format
-- Keep responses concise (2-4 sentences typically)
-- Use bullet points for lists
-- Be direct and helpful
-`;
-
-serve(async (req) => {
-  const origin = req.headers.get("origin");
-  const corsHeaders = getCorsHeaders(origin);
-
+Deno.serve(async (req) => {
   // Handle CORS preflight
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
@@ -156,7 +39,7 @@ serve(async (req) => {
       });
     }
 
-    const { messages } = validationResult.data;
+    const { messages, stream } = validationResult.data;
 
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) {
@@ -167,10 +50,10 @@ serve(async (req) => {
       });
     }
 
-    // Limit conversation history for performance
+    // Limit conversation history for performance (reduced from 50 to 20)
     const recentMessages = messages.slice(-10);
 
-    console.log("Sending request to Lovable AI Gateway...");
+    console.log("Sending request to Lovable AI Gateway (streaming:", stream, ")");
 
     const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
@@ -182,6 +65,7 @@ serve(async (req) => {
         model: "google/gemini-2.5-flash",
         messages: [{ role: "system", content: SYSTEM_PROMPT }, ...recentMessages],
         max_tokens: 500,
+        stream,
       }),
     });
 
@@ -200,7 +84,7 @@ serve(async (req) => {
           JSON.stringify({
             error: "AI service temporarily unavailable. Please contact us directly at contact@hyrx.tech",
           }),
-          { status: 402, headers: { ...corsHeaders, "Content-Type": "application/json" } },
+          { status: 402, headers: { ...corsHeaders, "Content-Type": "application/json" } }
         );
       }
 
@@ -210,6 +94,15 @@ serve(async (req) => {
       });
     }
 
+    // Streaming response - pass through the SSE stream directly
+    if (stream) {
+      console.log("Streaming AI response...");
+      return new Response(response.body, {
+        headers: { ...corsHeaders, "Content-Type": "text/event-stream" },
+      });
+    }
+
+    // Non-streaming fallback
     const data = await response.json();
     const assistantMessage = data.choices?.[0]?.message?.content;
 
@@ -232,7 +125,7 @@ serve(async (req) => {
       JSON.stringify({
         error: "Something went wrong. Please try again or contact us at contact@hyrx.tech",
       }),
-      { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } },
+      { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
   }
 });
