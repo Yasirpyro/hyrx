@@ -6,6 +6,20 @@ import { GradientButton } from "@/components/ui/gradient-button";
 import { Section, SectionHeader, Reveal, StaggerContainer, StaggerItem } from "@/components/ui/Section";
 import { FeatureCard } from "@/components/ui/Cards";
 import { AgentWorkflowDiagram } from "@/components/AgentWorkflowDiagram";
+import { SEO } from "@/components/SEO";
+
+const serviceSchema = {
+  "@context": "https://schema.org",
+  "@type": "Service",
+  "name": "AI Agents & Workflow Automation",
+  "provider": {
+    "@type": "Organization",
+    "name": "HYRX"
+  },
+  "description": "Production-grade AI agents with tool-use capabilities, robust evaluations, and monitoring designed for reliability and real business impact.",
+  "serviceType": "AI Development",
+  "areaServed": "Worldwide"
+};
 
 const useCases = [
   {
@@ -170,6 +184,11 @@ function ROICalculatorSection() {
 export default function ServiceAgents() {
   return (
     <Layout>
+      <SEO
+        title="AI Agents & Workflow Automation"
+        description="Build production-grade AI agents with tool-use capabilities, robust evaluations, and monitoring designed for reliability and real business impact."
+        schema={serviceSchema}
+      />
       {/* Hero */}
       <section className="pt-32 pb-16 sm:pt-40 sm:pb-20">
         <div className="container-main">

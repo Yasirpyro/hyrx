@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { GradientButton } from "@/components/ui/gradient-button";
 import { Section, SectionHeader, StaggerContainer, StaggerItem, Reveal } from "@/components/ui/Section";
 import { ServiceCard } from "@/components/ui/Cards";
+import { SEO } from "@/components/SEO";
 
 const services = [
   {
@@ -30,6 +31,10 @@ const services = [
 export default function Services() {
   return (
     <Layout>
+      <SEO
+        title="AI & Automation Services"
+        description="From AI agents to workflow automations, HYRX builds production-ready solutions designed for reliability, security, and measurable outcomes."
+      />
       {/* Hero */}
       <section className="pt-32 pb-16 sm:pt-40 sm:pb-20">
         <div className="container-main">

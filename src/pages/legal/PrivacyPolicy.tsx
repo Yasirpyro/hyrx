@@ -1,9 +1,14 @@
 import { Layout } from "@/components/layout/Layout";
 import { Section, Reveal } from "@/components/ui/Section";
+import { SEO } from "@/components/SEO";
 
 export default function PrivacyPolicy() {
   return (
     <Layout>
+      <SEO
+        title="Privacy Policy"
+        description="HYRX privacy policy. Learn how we collect, use, and protect your personal information."
+      />
       <section className="pt-32 pb-16 sm:pt-40 sm:pb-20">
         <div className="container-main">
           <div className="max-w-3xl">
@@ -78,7 +83,7 @@ export default function PrivacyPolicy() {
             <h2>6. Contact Us</h2>
             <p>
               If you have any questions about this Privacy Policy, please contact us at{" "}
-              <a href="mailto:hello@example.com">hello@example.com</a>.
+              <a href="mailto:contact@hyrx.tech">contact@hyrx.tech</a>.
             </p>
           </Reveal>
         </div>

@@ -5,6 +5,7 @@ import { GradientButton } from "@/components/ui/gradient-button";
 import { Section, SectionHeader, Reveal, StaggerContainer, StaggerItem } from "@/components/ui/Section";
 import { DemoCard } from "@/components/ui/Cards";
 import { ArrowRight } from "lucide-react";
+import { SEO } from "@/components/SEO";
 
 const demos = [
   {
@@ -48,6 +49,10 @@ const demos = [
 export default function Work() {
   return (
     <Layout>
+      <SEO
+        title="Case Studies & Demo Projects"
+        description="Explore representative project examples showing the types of AI agents, chatbots, and 3D/AR solutions we deliver."
+      />
       {/* Hero */}
       <section className="pt-32 pb-16 sm:pt-40 sm:pb-20">
         <div className="container-main">
