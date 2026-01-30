@@ -1,9 +1,14 @@
 import { Layout } from "@/components/layout/Layout";
 import { Section, Reveal } from "@/components/ui/Section";
+import { SEO } from "@/components/SEO";
 
 export default function Terms() {
   return (
     <Layout>
+      <SEO
+        title="Terms of Service"
+        description="HYRX terms of service. Understand our service agreements, intellectual property, and payment terms."
+      />
       <section className="pt-32 pb-16 sm:pt-40 sm:pb-20">
         <div className="container-main">
           <div className="max-w-3xl">
@@ -70,7 +75,7 @@ export default function Terms() {
             <h2>7. Contact</h2>
             <p>
               For questions about these Terms of Service, please contact us at{" "}
-              <a href="mailto:hello@example.com">hello@example.com</a>.
+              <a href="mailto:contact@hyrx.tech">contact@hyrx.tech</a>.
             </p>
           </Reveal>
         </div>

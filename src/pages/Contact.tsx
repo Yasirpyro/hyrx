@@ -10,6 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useToast } from "@/hooks/use-toast";
 import { Mail, MapPin, Send, Loader2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import { SEO } from "@/components/SEO";
 
 const services = [
   { id: "ai-agents", label: "AI Agents & Automations" },
@@ -151,6 +152,10 @@ export default function Contact() {
 
   return (
     <Layout>
+      <SEO
+        title="Contact Us"
+        description="Get in touch with HYRX. Request a quote for AI agents, chatbots, or 3D/AR projects. We respond within 1-2 business days."
+      />
       {/* Hero */}
       <section className="pt-32 pb-16 sm:pt-40 sm:pb-20">
         <div className="container-main">

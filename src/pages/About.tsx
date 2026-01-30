@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { GradientButton } from "@/components/ui/gradient-button";
 import { Section, Reveal } from "@/components/ui/Section";
 import { ArrowRight, Target, Zap, Shield, Users } from "lucide-react";
+import { SEO } from "@/components/SEO";
 
 const values = [
   {
@@ -31,6 +32,10 @@ const values = [
 export default function About() {
   return (
     <Layout>
+      <SEO
+        title="About Us"
+        description="HYRX is a specialized AI studio that helps teams ship production-ready agents, automations, and chat systems. Built for reliability and scale."
+      />
       {/* Hero */}
       <section className="pt-32 pb-16 sm:pt-40 sm:pb-20">
         <div className="container-main">
