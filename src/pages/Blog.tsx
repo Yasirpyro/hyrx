@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { ArrowRight, Clock, Tag, BookOpen, TrendingUp } from "lucide-react";
 import { Layout } from "@/components/layout/Layout";
 import { SEO } from "@/components/SEO";
@@ -93,10 +93,9 @@ function BlogCard({ post, index }: { post: BlogPost; index: number }) {
 export default function Blog() {
   const [activeCategory, setActiveCategory] = useState("All");
 
-  const filtered =
-    activeCategory === "All"
-      ? blogPosts
-      : blogPosts.filter((p) => p.category === activeCategory);
+  const filtered = activeCategory === "All"
+    ? blogPosts
+    : blogPosts.filter((p) => p.category === activeCategory);
 
   const featured = blogPosts[0];
 
@@ -251,17 +250,27 @@ export default function Blog() {
           </div>
         </Reveal>
 
-        <StaggerContainer className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-7">
-          {filtered.map((post, i) => (
-            <BlogCard key={post.slug} post={post} index={i} />
-          ))}
-        </StaggerContainer>
-
-        {filtered.length === 0 && (
-          <div className="text-center py-20 text-muted-foreground">
-            No posts in this category yet.
-          </div>
-        )}
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={activeCategory}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.25 }}
+          >
+            {filtered.length === 0 ? (
+              <div className="text-center py-20 text-muted-foreground">
+                No posts in this category yet.
+              </div>
+            ) : (
+              <StaggerContainer className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-7">
+                {filtered.map((post, i) => (
+                  <BlogCard key={post.slug} post={post} index={i} />
+                ))}
+              </StaggerContainer>
+            )}
+          </motion.div>
+        </AnimatePresence>
       </Section>
 
       {/* Bottom Ad */}
