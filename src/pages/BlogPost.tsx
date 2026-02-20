@@ -7,6 +7,7 @@ import { Reveal } from "@/components/ui/Section";
 import { getBlogPost, blogPosts } from "@/data/blogPosts";
 import type { BlogPost } from "@/data/blogPosts";
 import { AdUnit } from "@/components/ads/AdUnit";
+import { TableOfContents, slugify } from "@/components/blog/TableOfContents";
 import { cn } from "@/lib/utils";
 
 const categoryColorMap: Record<string, string> = {
@@ -27,18 +28,20 @@ function RenderContent({ content }: { content: string }) {
 
         // H2
         if (trimmed.startsWith("## ")) {
+          const text = trimmed.slice(3);
           return (
-            <h2 key={i} className="text-xl sm:text-2xl font-bold text-foreground mt-10 mb-4 pt-6 border-t border-border/30">
-              {trimmed.slice(3)}
+            <h2 key={i} id={slugify(text)} className="text-xl sm:text-2xl font-bold text-foreground mt-10 mb-4 pt-6 border-t border-border/30">
+              {text}
             </h2>
           );
         }
 
         // H3
         if (trimmed.startsWith("### ")) {
+          const text = trimmed.slice(4);
           return (
-            <h3 key={i} className="text-lg sm:text-xl font-semibold text-foreground mt-8 mb-3">
-              {trimmed.slice(4)}
+            <h3 key={i} id={slugify(text)} className="text-lg sm:text-xl font-semibold text-foreground mt-8 mb-3">
+              {text}
             </h3>
           );
         }
@@ -269,6 +272,9 @@ export default function BlogPost() {
 
           {/* Sidebar */}
           <aside className="lg:sticky lg:top-28 space-y-6">
+            {/* Table of Contents */}
+            <TableOfContents content={post.content} />
+
             {/* Ad */}
             <AdUnit format="rectangle" />
 
