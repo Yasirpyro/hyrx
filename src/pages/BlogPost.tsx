@@ -196,89 +196,83 @@ export default function BlogPost() {
         </Reveal>
       </div>
 
-      {/* Article header */}
-      <header className="container-main pb-10">
-        <div className="max-w-3xl">
-          <Reveal>
-            <div className="flex flex-wrap items-center gap-3 mb-5">
-              <span
-                className={cn(
-                  "inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium border",
-                  categoryColorMap[post.category] ?? "bg-muted text-muted-foreground border-border"
-                )}
-              >
-                <Tag className="w-3 h-3" />
-                {post.category}
-              </span>
-              <span className="inline-flex items-center gap-1.5 text-xs text-muted-foreground">
-                <Clock className="w-3 h-3" />
-                {post.readingTime} read
-              </span>
-              <span className="inline-flex items-center gap-1.5 text-xs text-muted-foreground">
-                <Calendar className="w-3 h-3" />
-                {post.publishedDate}
-              </span>
-            </div>
-          </Reveal>
-
-          <Reveal delay={0.1}>
-            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground leading-tight mb-5">
-              {post.title}
-            </h1>
-          </Reveal>
-
-          <Reveal delay={0.2}>
-            <p className="text-body-lg border-l-4 border-primary/50 pl-5 text-muted-foreground">
-              {post.excerpt}
-            </p>
-          </Reveal>
-        </div>
-      </header>
-
-      {/* Gradient divider */}
-      <div className="container-main mb-10">
-        <div className="max-w-3xl h-px bg-gradient-to-r from-primary/50 via-accent/30 to-transparent" />
-      </div>
-
       {/* Main content + sidebar */}
       <div className="container-main pb-20">
         <div className="grid lg:grid-cols-[1fr_300px] gap-12 lg:gap-16 items-start">
-          {/* Article body */}
-          <article className="max-w-2xl">
-            <Reveal>
-              <RenderContent content={post.content} />
-            </Reveal>
+          {/* Left column: header + article */}
+          <div>
+            <header className="pb-10">
+              <div className="max-w-3xl">
+                <Reveal>
+                  <div className="flex flex-wrap items-center gap-3 mb-5">
+                    <span
+                      className={cn(
+                        "inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium border",
+                        categoryColorMap[post.category] ?? "bg-muted text-muted-foreground border-border"
+                      )}
+                    >
+                      <Tag className="w-3 h-3" />
+                      {post.category}
+                    </span>
+                    <span className="inline-flex items-center gap-1.5 text-xs text-muted-foreground">
+                      <Clock className="w-3 h-3" />
+                      {post.readingTime} read
+                    </span>
+                    <span className="inline-flex items-center gap-1.5 text-xs text-muted-foreground">
+                      <Calendar className="w-3 h-3" />
+                      {post.publishedDate}
+                    </span>
+                  </div>
+                </Reveal>
 
-            {/* Mid-article ad */}
-            <div className="my-10">
-              <AdUnit format="horizontal" />
+                <Reveal delay={0.1}>
+                  <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground leading-tight mb-5">
+                    {post.title}
+                  </h1>
+                </Reveal>
+
+                <Reveal delay={0.2}>
+                  <p className="text-body-lg border-l-4 border-primary/50 pl-5 text-muted-foreground">
+                    {post.excerpt}
+                  </p>
+                </Reveal>
+              </div>
+            </header>
+
+            <div className="mb-10">
+              <div className="max-w-3xl h-px bg-gradient-to-r from-primary/50 via-accent/30 to-transparent" />
             </div>
 
-            {/* Author block */}
-            <Reveal>
-              <div className="mt-12 p-6 rounded-2xl bg-card border border-border/50 flex items-center gap-4">
-                <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
-                  <img src="/brandlogo.webp" alt="HYRX" className="w-8 h-8 rounded-lg object-contain" />
-                </div>
-                <div>
-                  <p className="text-sm font-semibold text-foreground">HYRX AI Studio</p>
-                  <p className="text-xs text-muted-foreground mt-0.5">
-                    Building production-ready AI agents, automations, and immersive experiences for modern teams.
-                  </p>
-                </div>
+            <article className="max-w-2xl">
+              <Reveal>
+                <RenderContent content={post.content} />
+              </Reveal>
+
+              <div className="my-10">
+                <AdUnit format="horizontal" />
               </div>
-            </Reveal>
-          </article>
+
+              <Reveal>
+                <div className="mt-12 p-6 rounded-2xl bg-card border border-border/50 flex items-center gap-4">
+                  <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
+                    <img src="/brandlogo.webp" alt="HYRX" className="w-8 h-8 rounded-lg object-contain" />
+                  </div>
+                  <div>
+                    <p className="text-sm font-semibold text-foreground">HYRX AI Studio</p>
+                    <p className="text-xs text-muted-foreground mt-0.5">
+                      Building production-ready AI agents, automations, and immersive experiences for modern teams.
+                    </p>
+                  </div>
+                </div>
+              </Reveal>
+            </article>
+          </div>
 
           {/* Sidebar */}
           <aside className="lg:sticky lg:top-28 space-y-6">
-            {/* Table of Contents */}
             <TableOfContents content={post.content} />
-
-            {/* Ad */}
             <AdUnit format="rectangle" />
 
-            {/* Related posts */}
             {others.length > 0 && (
               <div>
                 <h3 className="text-sm font-semibold text-foreground uppercase tracking-wider mb-4">
@@ -292,7 +286,6 @@ export default function BlogPost() {
               </div>
             )}
 
-            {/* CTA */}
             <div className="p-5 rounded-xl bg-gradient-to-br from-primary/10 via-card to-accent/10 border border-border/50">
               <h3 className="text-sm font-bold text-foreground mb-2">Build AI for your business</h3>
               <p className="text-xs text-muted-foreground mb-4 leading-relaxed">
