@@ -149,7 +149,7 @@ function TaskItem({ task, isAnimating }: { task: Task; isAnimating: boolean }) {
     <div
       className={`
         relative flex items-center gap-3 px-3 py-2 rounded-lg transition-all duration-300
-        ${isRunning ? "bg-white/5" : ""}
+        ${isRunning ? "bg-primary/5" : ""}
       `}
     >
       {/* Progress bar for running state */}
@@ -166,7 +166,7 @@ function TaskItem({ task, isAnimating }: { task: Task; isAnimating: boolean }) {
           relative z-10 flex items-center justify-center w-5 h-5 shrink-0
           ${isDone ? "text-emerald-400" : ""}
           ${isRunning ? "text-cyan-400" : ""}
-          ${isQueued ? "text-white/30" : ""}
+          ${isQueued ? "text-muted-foreground/50" : ""}
         `}
       >
         {isDone && <CheckIcon />}
@@ -179,9 +179,9 @@ function TaskItem({ task, isAnimating }: { task: Task; isAnimating: boolean }) {
       <span
         className={`
           relative z-10 text-sm transition-colors duration-300
-          ${isDone ? "text-white/80" : ""}
-          ${isRunning ? "text-white" : ""}
-          ${isQueued ? "text-white/40" : ""}
+          ${isDone ? "text-foreground/80" : ""}
+          ${isRunning ? "text-foreground" : ""}
+          ${isQueued ? "text-muted-foreground/60" : ""}
         `}
       >
         {task.label}
@@ -207,9 +207,9 @@ function LogArea({
   }, [logs]);
 
   return (
-    <div className="mt-4 pt-4 border-t border-white/5">
+    <div className="mt-4 pt-4 border-t border-border/30">
       <div className="flex items-center gap-2 mb-2">
-        <span className="text-[10px] uppercase tracking-wider text-white/40 font-medium">
+        <span className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium">
           Log
         </span>
         {isAnimating && (
@@ -218,13 +218,13 @@ function LogArea({
       </div>
       <div
         ref={logContainerRef}
-        className="h-[72px] overflow-hidden rounded-lg bg-black/30 p-2 font-mono text-[11px] leading-relaxed"
+        className="h-[72px] overflow-hidden rounded-lg bg-muted/50 p-2 font-mono text-[11px] leading-relaxed"
       >
         {logs.map((log, i) => (
           <div
             key={i}
             className={`
-              text-white/50 transition-opacity duration-300
+              text-muted-foreground transition-opacity duration-300
               ${i === logs.length - 1 && isAnimating ? "animate-type-in" : ""}
             `}
           >
@@ -336,8 +336,8 @@ export function HeroAgentRunner() {
       <div
         className={`
           relative w-full
-          rounded-2xl border border-white/10
-          bg-white/[0.03] backdrop-blur-xl
+          rounded-2xl border border-border/30
+          bg-card/80 backdrop-blur-xl
           overflow-hidden
           z-10
           ${isAnimating ? "animate-fade-in" : ""}
@@ -360,10 +360,10 @@ export function HeroAgentRunner() {
           {/* Header */}
           <div className="flex items-center justify-between mb-5">
             <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-cyan-500/20 to-fuchsia-500/20 border border-white/10 flex items-center justify-center text-cyan-400">
+              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-cyan-500/20 to-fuchsia-500/20 border border-border/30 flex items-center justify-center text-cyan-400">
                 <AgentIcon />
               </div>
-              <span className="text-sm font-semibold text-white tracking-tight">
+              <span className="text-sm font-semibold text-foreground tracking-tight">
                 HYRX Agent
               </span>
             </div>
