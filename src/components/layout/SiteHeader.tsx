@@ -80,8 +80,8 @@ export function SiteHeader() {
           <img
             src="/brandlogo.webp"
             alt="HYRX Logo"
-            className="w-10 h-10 rounded-lg object-contain dark:drop-shadow-none drop-shadow-[0_0_0.5px_rgba(0,0,0,0.8)]"
-            style={{ filter: theme === 'light' ? 'drop-shadow(0 0 0.3px rgba(0,0,0,0.6)) drop-shadow(0 0 0.3px rgba(0,0,0,0.6))' : undefined }}
+            className="w-10 h-10 rounded-lg object-contain"
+            style={{ filter: theme === 'light' ? 'drop-shadow(0 0 0.5px rgba(0,0,0,0.7)) drop-shadow(0 0 0.5px rgba(0,0,0,0.7)) drop-shadow(0 0 0.5px rgba(0,0,0,0.7))' : undefined }}
           />
           <div className="flex flex-col">
             <span className="text-xl font-bold text-foreground leading-tight">
