@@ -202,8 +202,6 @@ export default function BlogPost() {
         schema={articleSchema}
       />
 
-      {/* Blog light theme wrapper */}
-      <div className="blog-light bg-background min-h-screen">
       {/* Back nav */}
       <div className="container-main pt-28 pb-4">
         <Reveal>
@@ -323,7 +321,6 @@ export default function BlogPost() {
           </aside>
         </div>
       </div>
-      </div>{/* end blog-light */}
     </Layout>
   );
 }

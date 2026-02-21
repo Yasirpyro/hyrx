@@ -91,25 +91,25 @@ html.lenis body {
     --sidebar-ring: 190 100% 45%;
   }
 
-  /* Blog-scoped light theme */
-  .blog-light {
-    --background: 0 0% 99%;
-    --foreground: 230 25% 12%;
+  /* Global light theme */
+  .light {
+    --background: 0 0% 98%;
+    --foreground: 230 15% 15%;
     
     --card: 0 0% 100%;
-    --card-foreground: 230 25% 12%;
+    --card-foreground: 230 15% 15%;
     
     --popover: 0 0% 100%;
-    --popover-foreground: 230 25% 12%;
+    --popover-foreground: 230 15% 15%;
     
     --primary: 190 100% 32%;
     --primary-foreground: 0 0% 100%;
     
-    --secondary: 260 30% 94%;
-    --secondary-foreground: 260 40% 30%;
+    --secondary: 260 20% 93%;
+    --secondary-foreground: 260 30% 30%;
     
-    --muted: 220 14% 95%;
-    --muted-foreground: 220 10% 40%;
+    --muted: 220 14% 94%;
+    --muted-foreground: 220 10% 42%;
     
     --accent: 320 80% 48%;
     --accent-foreground: 0 0% 100%;
@@ -117,9 +117,29 @@ html.lenis body {
     --destructive: 0 84% 50%;
     --destructive-foreground: 0 0% 100%;
     
-    --border: 220 13% 88%;
-    --input: 220 13% 88%;
+    --border: 220 13% 87%;
+    --input: 220 13% 87%;
     --ring: 190 100% 32%;
+    
+    /* Custom tokens - light */
+    --glow-primary: 190 100% 40%;
+    --glow-accent: 320 80% 55%;
+    --gradient-start: 190 100% 32%;
+    --gradient-end: 320 80% 48%;
+    
+    /* Glass effect - light */
+    --glass-bg: 0 0% 100% / 0.85;
+    --glass-border: 220 13% 87% / 0.6;
+    
+    /* Sidebar - light */
+    --sidebar-background: 0 0% 97%;
+    --sidebar-foreground: 230 15% 15%;
+    --sidebar-primary: 190 100% 32%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 220 14% 94%;
+    --sidebar-accent-foreground: 230 15% 15%;
+    --sidebar-border: 220 13% 87%;
+    --sidebar-ring: 190 100% 32%;
   }
 }
 
