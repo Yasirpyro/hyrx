@@ -98,7 +98,7 @@ export default function Blog() {
     ? blogPosts
     : blogPosts.filter((p) => p.category === activeCategory);
 
-  const featured = blogPosts[0];
+  const featured = blogPosts.find(p => p.slug === "narrow-ai-to-agi-to-superintelligence") ?? blogPosts[0];
 
   const blogSchema = {
     "@context": "https://schema.org",
@@ -199,10 +199,10 @@ export default function Blog() {
                   {/* Stats panel */}
                   <div className="grid grid-cols-2 gap-4">
                     {[
-                      { label: "Articles published", value: "8" },
-                      { label: "Categories covered", value: "4" },
-                      { label: "Min avg read time", value: "7" },
-                      { label: "Topics in 2026", value: "20+" },
+                      { label: "Articles published", value: "10" },
+                      { label: "Categories covered", value: "5" },
+                      { label: "Min avg read time", value: "8" },
+                      { label: "Topics in 2026", value: "25+" },
                     ].map((stat) => (
                       <div
                         key={stat.label}
