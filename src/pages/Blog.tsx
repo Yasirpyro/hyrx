@@ -151,7 +151,6 @@ export default function Blog() {
 
         {/* Background effects */}
         <div className="absolute top-0 right-0 w-2/3 h-full bg-gradient-to-l from-primary/5 to-transparent pointer-events-none" />
-        <div className="absolute top-1/2 right-16 w-72 h-72 bg-accent/10 rounded-full blur-3xl pointer-events-none" />
       </section>
 
       {/* Featured Post */}
