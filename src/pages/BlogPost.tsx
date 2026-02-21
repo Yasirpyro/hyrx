@@ -1,4 +1,5 @@
 import { useParams, Link, Navigate } from "react-router-dom";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { ArrowLeft, Clock, Tag, Calendar, ArrowRight } from "lucide-react";
 import { Layout } from "@/components/layout/Layout";
@@ -149,6 +150,17 @@ function RelatedCard({ post }: { post: BlogPost }) {
 export default function BlogPost() {
   const { slug } = useParams<{ slug: string }>();
   const post = getBlogPost(slug ?? "");
+  const [progress, setProgress] = useState(0);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollTop = window.scrollY;
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      setProgress(docHeight > 0 ? Math.min((scrollTop / docHeight) * 100, 100) : 0);
+    };
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   if (!post) return <Navigate to="/blog" replace />;
 
@@ -176,6 +188,13 @@ export default function BlogPost() {
 
   return (
     <Layout>
+      {/* Reading progress bar */}
+      <div className="fixed top-0 left-0 right-0 z-50 h-1 bg-muted/30">
+        <div
+          className="h-full bg-primary transition-[width] duration-150 ease-out"
+          style={{ width: `${progress}%` }}
+        />
+      </div>
       <SEO
         title={post.title}
         description={post.excerpt}
