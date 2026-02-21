@@ -195,7 +195,7 @@ export function SiteHeader() {
           <GradientButton
             to="/contact"
             height="38px"
-            className="hidden sm:inline-flex text-sm"
+            className="hidden sm:inline-flex text-sm whitespace-nowrap"
           >
             Request a Quote
           </GradientButton>
