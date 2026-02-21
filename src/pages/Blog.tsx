@@ -17,6 +17,7 @@ import { cn } from "@/lib/utils";
 
 const categoryColorMap: Record<string, string> = {
   "AI Technology": "bg-primary/10 text-primary border-primary/20",
+  "AI Fundamentals": "bg-accent/10 text-accent border-accent/20",
   "AI Across Industries": "bg-accent/10 text-accent border-accent/20",
   "Ethics & Governance": "bg-secondary/80 text-foreground border-secondary/40",
   "AI Business & Market": "bg-primary/10 text-primary border-primary/20",
