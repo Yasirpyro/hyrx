@@ -33,8 +33,12 @@ export default function About() {
   return (
     <Layout>
       <SEO
-        title="About Us"
-        description="HYRX is a specialized AI studio that helps teams ship production-ready agents, automations, and chat systems. Built for reliability and scale."
+        title="About HYRX — AI Studio for Production Systems"
+        description="HYRX is a specialized AI studio helping teams ship production-ready agents, automations, and chat systems. Built for reliability, security, and scale."
+        breadcrumbs={[
+          { name: "Home", url: "https://hyrx.tech/" },
+          { name: "About", url: "https://hyrx.tech/about" },
+        ]}
       />
       {/* Hero */}
       <section className="pt-32 pb-16 sm:pt-40 sm:pb-20">

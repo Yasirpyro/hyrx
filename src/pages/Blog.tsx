@@ -119,6 +119,10 @@ export default function Blog() {
         title="AI Industry Blog — Insights & Updates 2026"
         description="Deep-dive articles on AI agents, hardware breakthroughs, enterprise ROI, ethics, and market trends from the HYRX team. Fresh perspectives for tech leaders in 2026."
         schema={blogSchema}
+        breadcrumbs={[
+          { name: "Home", url: "https://hyrx.tech/" },
+          { name: "Blog", url: "https://hyrx.tech/blog" },
+        ]}
       />
 
       {/* Hero */}

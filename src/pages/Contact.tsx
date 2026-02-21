@@ -153,8 +153,12 @@ export default function Contact() {
   return (
     <Layout>
       <SEO
-        title="Contact Us"
+        title="Contact Us — Request a Quote"
         description="Get in touch with HYRX. Request a quote for AI agents, chatbots, or 3D/AR projects. We respond within 1-2 business days."
+        breadcrumbs={[
+          { name: "Home", url: "https://hyrx.tech/" },
+          { name: "Contact", url: "https://hyrx.tech/contact" },
+        ]}
       />
       {/* Hero */}
       <section className="pt-32 pb-16 sm:pt-40 sm:pb-20">

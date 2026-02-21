@@ -52,6 +52,18 @@ export default function Work() {
       <SEO
         title="Case Studies & Demo Projects"
         description="Explore representative project examples showing the types of AI agents, chatbots, and 3D/AR solutions we deliver."
+        breadcrumbs={[
+          { name: "Home", url: "https://hyrx.tech/" },
+          { name: "Work", url: "https://hyrx.tech/work" },
+        ]}
+        schema={{
+          "@context": "https://schema.org",
+          "@type": "CollectionPage",
+          name: "HYRX Case Studies & Demo Projects",
+          description: "Representative project examples showing AI agents, chatbots, and 3D/AR solutions.",
+          url: "https://hyrx.tech/work",
+          publisher: { "@type": "Organization", name: "HYRX", url: "https://hyrx.tech" },
+        }}
       />
       {/* Hero */}
       <section className="pt-32 pb-16 sm:pt-40 sm:pb-20">

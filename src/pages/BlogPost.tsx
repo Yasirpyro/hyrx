@@ -174,16 +174,30 @@ export default function BlogPost() {
     "@type": "Article",
     headline: post.title,
     description: post.excerpt,
+    image: "https://hyrx.tech/brandlogo.png",
+    url: `https://hyrx.tech/blog/${post.slug}`,
+    mainEntityOfPage: {
+      "@type": "WebPage",
+      "@id": `https://hyrx.tech/blog/${post.slug}`,
+    },
     publisher: {
       "@type": "Organization",
       name: "HYRX",
       url: "https://hyrx.tech",
+      logo: {
+        "@type": "ImageObject",
+        url: "https://hyrx.tech/brandlogo.png",
+      },
     },
     datePublished: "2026-02-01",
+    dateModified: "2026-02-21",
     author: {
       "@type": "Organization",
       name: "HYRX",
+      url: "https://hyrx.tech",
     },
+    articleSection: post.category,
+    wordCount: post.content.split(/\s+/).length,
   };
 
   return (
@@ -200,6 +214,11 @@ export default function BlogPost() {
         description={post.excerpt}
         type="article"
         schema={articleSchema}
+        breadcrumbs={[
+          { name: "Home", url: "https://hyrx.tech/" },
+          { name: "Blog", url: "https://hyrx.tech/blog" },
+          { name: post.title, url: `https://hyrx.tech/blog/${post.slug}` },
+        ]}
       />
 
       {/* Back nav */}
