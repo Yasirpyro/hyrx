@@ -34,6 +34,19 @@ export default function Services() {
       <SEO
         title="AI & Automation Services"
         description="From AI agents to workflow automations, HYRX builds production-ready solutions designed for reliability, security, and measurable outcomes."
+        breadcrumbs={[
+          { name: "Home", url: "https://hyrx.tech/" },
+          { name: "Services", url: "https://hyrx.tech/services" },
+        ]}
+        schema={{
+          "@context": "https://schema.org",
+          "@type": "Service",
+          name: "HYRX AI & Automation Services",
+          description: "Production-ready AI agents, workflow automations, and custom chatbots for modern teams.",
+          provider: { "@type": "Organization", name: "HYRX", url: "https://hyrx.tech" },
+          serviceType: "AI Development",
+          areaServed: "Worldwide",
+        }}
       />
       {/* Hero */}
       <section className="pt-32 pb-16 sm:pt-40 sm:pb-20">

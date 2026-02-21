@@ -1,6 +1,11 @@
 import { Helmet } from "react-helmet-async";
 import { useLocation } from "react-router-dom";
 
+interface BreadcrumbItem {
+  name: string;
+  url: string;
+}
+
 interface SEOProps {
   title: string;
   description: string;
@@ -8,6 +13,7 @@ interface SEOProps {
   image?: string;
   noindex?: boolean;
   schema?: object;
+  breadcrumbs?: BreadcrumbItem[];
 }
 
 const BASE_URL = "https://hyrx.tech";
@@ -19,6 +25,7 @@ export function SEO({
   image = "/brandlogo.png",
   noindex = false,
   schema,
+  breadcrumbs,
 }: SEOProps) {
   const { pathname } = useLocation();
   const canonicalUrl = `${BASE_URL}${pathname}`;
@@ -50,6 +57,22 @@ export function SEO({
       {/* JSON-LD Schema */}
       {schema && (
         <script type="application/ld+json">{JSON.stringify(schema)}</script>
+      )}
+
+      {/* Breadcrumb Schema */}
+      {breadcrumbs && breadcrumbs.length > 0 && (
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            itemListElement: breadcrumbs.map((item, i) => ({
+              "@type": "ListItem",
+              position: i + 1,
+              name: item.name,
+              item: item.url,
+            })),
+          })}
+        </script>
       )}
     </Helmet>
   );
