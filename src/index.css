@@ -90,6 +90,37 @@ html.lenis body {
     --sidebar-border: 230 20% 18%;
     --sidebar-ring: 190 100% 45%;
   }
+
+  /* Blog-scoped light theme */
+  .blog-light {
+    --background: 0 0% 99%;
+    --foreground: 230 25% 12%;
+    
+    --card: 0 0% 100%;
+    --card-foreground: 230 25% 12%;
+    
+    --popover: 0 0% 100%;
+    --popover-foreground: 230 25% 12%;
+    
+    --primary: 190 100% 32%;
+    --primary-foreground: 0 0% 100%;
+    
+    --secondary: 260 30% 94%;
+    --secondary-foreground: 260 40% 30%;
+    
+    --muted: 220 14% 95%;
+    --muted-foreground: 220 10% 40%;
+    
+    --accent: 320 80% 48%;
+    --accent-foreground: 0 0% 100%;
+    
+    --destructive: 0 84% 50%;
+    --destructive-foreground: 0 0% 100%;
+    
+    --border: 220 13% 88%;
+    --input: 220 13% 88%;
+    --ring: 190 100% 32%;
+  }
 }
 
 @layer base {

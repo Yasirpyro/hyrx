@@ -228,7 +228,8 @@ export default function Blog() {
         <AdUnit format="horizontal" />
       </div>
 
-      {/* Category Filter + Posts */}
+      {/* Category Filter + Posts — light theme */}
+      <div className="blog-light bg-background">
       <Section>
         {/* Filter pills */}
         <Reveal>
@@ -277,6 +278,7 @@ export default function Blog() {
       <div className="container-main mb-16">
         <AdUnit format="horizontal" />
       </div>
+      </div>{/* end blog-light */}
 
       {/* Newsletter CTA */}
       <Section className="bg-card/30 border-y border-border/30">
