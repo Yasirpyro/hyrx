@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Layout } from "@/components/layout/Layout";
 import { Section, Reveal } from "@/components/ui/Section";
 import { Button } from "@/components/ui/button";
@@ -47,6 +47,16 @@ export default function Contact() {
         : [...prev.services, serviceId],
     }));
   };
+
+  // Lazy-load reCAPTCHA script when Contact page mounts
+  useEffect(() => {
+    if (document.querySelector('script[src*="recaptcha"]')) return;
+    const script = document.createElement("script");
+    script.src = "https://www.google.com/recaptcha/enterprise.js?render=6LfONTwsAAAAANWWtBiaTd34TbaP0_Vx7qUf-GiY";
+    script.async = true;
+    script.defer = true;
+    document.body.appendChild(script);
+  }, []);
 
   const getRecaptchaToken = (action: string) =>
     new Promise<string>((resolve, reject) => {

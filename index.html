@@ -10,6 +10,11 @@
       gtag('config', 'G-2G9B72M9LT');
     </script>
     <meta charset="UTF-8" />
+    <!-- Preconnect to Google Fonts for faster loading -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" onload="this.onload=null;this.rel='stylesheet'" />
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" /></noscript>
     <link rel="icon" type="image/png" sizes="32x32" href="/brandlogo.png" />
     <link rel="icon" type="image/png" sizes="16x16" href="/brandlogo.png" />
     <link rel="apple-touch-icon" sizes="180x180" href="/brandlogo.png" />
@@ -61,11 +66,7 @@
 
   <body>
     <div id="root"></div>
-    <script
-      async
-      defer
-      src="https://www.google.com/recaptcha/enterprise.js?render=6LfONTwsAAAAANWWtBiaTd34TbaP0_Vx7qUf-GiY"
-    ></script>
+    <!-- reCAPTCHA loaded on-demand by Contact page -->
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
