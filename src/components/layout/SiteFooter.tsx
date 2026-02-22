@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { ArrowUpRight } from "lucide-react";
+import { useTheme } from "@/components/providers/ThemeProvider";
 
 const footerLinks = {
   services: [
@@ -19,13 +20,16 @@ const footerLinks = {
 };
 
 export function SiteFooter() {
+  const { theme } = useTheme();
   return (
     <footer id="site-footer" className="border-t border-border/50 bg-card/30">
       <div className="container-main section-sm">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-12">
           <div className="lg:col-span-1">
             <Link to="/" className="flex items-center gap-3 mb-4">
-              <img src="/brandlogo.webp" alt="HYRX Logo" className="w-10 h-10 rounded-lg object-contain" />
+              <img src="/brandlogo.webp" alt="HYRX Logo" className="w-10 h-10 rounded-lg object-contain"
+                style={{ filter: theme === 'light' ? 'drop-shadow(0 0 0.5px rgba(0,0,0,0.7)) drop-shadow(0 0 0.5px rgba(0,0,0,0.7)) drop-shadow(0 0 0.5px rgba(0,0,0,0.7))' : undefined }}
+              />
               <div className="flex flex-col">
                 <span className="text-xl font-bold text-foreground leading-tight">HYRX</span>
                 <span className="text-[10px] font-light text-foreground/70 tracking-[0.2em] uppercase leading-tight">
