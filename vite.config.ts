@@ -10,39 +10,7 @@ export default defineConfig(({ mode }) => ({
     port: 8080,
   },
   build: {
-    rollupOptions: {
-      output: {
-        manualChunks(id) {
-          if (!id.includes("node_modules")) return;
-
-          if (id.includes("react") || id.includes("scheduler")) {
-            return "react-vendor";
-          }
-
-          if (id.includes("react-router-dom")) {
-            return "router-vendor";
-          }
-
-          if (id.includes("@supabase/supabase-js")) {
-            return "supabase-vendor";
-          }
-
-          if (id.includes("@radix-ui") || id.includes("class-variance-authority") || id.includes("tailwind-merge") || id.includes("lucide-react")) {
-            return "ui-vendor";
-          }
-
-          if (id.includes("framer-motion") || id.includes("gsap") || id.includes("lenis") || id.includes("ogl")) {
-            return "motion-vendor";
-          }
-
-          if (id.includes("recharts")) {
-            return "charts-vendor";
-          }
-
-          return "vendor";
-        },
-      },
-    },
+    chunkSizeWarningLimit: 1200,
   },
   plugins: [react(), mode === "development" && componentTagger()].filter(Boolean),
   resolve: {
