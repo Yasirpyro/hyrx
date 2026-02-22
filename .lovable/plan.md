@@ -1,58 +1,93 @@
 
 
-# Light Mode for Blog Pages
+# Migration from Lovable Cloud to Cloudflare Pages
 
-## Recommendation
+## Deploying to Cloudflare Pages via GitHub
 
-As a senior dev, I recommend a **blog-scoped light theme override** rather than a full site-wide dark/light toggle. Here's why:
+Since you already have the GitHub repo connected (`github.com/Yasirpyro/ai-email-assistant`), deployment is straightforward:
 
-- Your brand identity (HYRX AI Studio) is built around a dark, hard-tech aesthetic -- the glows, glass effects, and grid backgrounds all depend on the dark palette
-- Blog content genuinely reads better on white backgrounds for long-form articles
-- A full site toggle would require re-theming every page, component, and animation -- a massive effort with diminishing returns
-- A blog-only light override is clean, professional, and what sites like Vercel, Linear, and Stripe do for their blogs
+1. Go to **Cloudflare Dashboard > Pages > Create a project**
+2. Select **Connect to Git** and choose your `ai-email-assistant` repository
+3. Configure build settings:
+   - **Framework preset**: Vite
+   - **Build command**: `npm run build`
+   - **Build output directory**: `dist`
+4. Add environment variables in Cloudflare Pages settings (you'll need `VITE_SUPABASE_URL` and `VITE_SUPABASE_PUBLISHABLE_KEY` pointing to your personal Supabase project)
+5. Since `hyrx.tech` is already configured on Cloudflare, go to **Pages > Custom domains** and add `hyrx.tech`
 
-## What Will Change
+Every push to your GitHub default branch will auto-deploy.
 
-- Blog listing page (`/blog`) keeps the current dark hero section but article cards get a clean white treatment
-- Blog post pages (`/blog/:slug`) switch to a white content area with a dark header/footer preserved
-- The header and footer stay dark-themed across the site for brand consistency
-- A light-mode CSS variable set is added and applied only within a `.blog-light` wrapper
+---
 
-## Technical Details
+## What Needs to Be Removed / Changed
 
-### 1. Add light-mode CSS variables (`src/index.css`)
+### 1. Voice Assistant Chatbot (entire feature removal)
 
-Add a `.blog-light` class with a complete light palette:
-- White background, dark text
-- Adjusted card, border, muted, and primary colors for light context
-- Keeps the same primary (cyan) and accent (magenta) hues but with light-friendly contrast
+**Files to delete:**
+- `src/components/chat/VoiceAssistantWidget.tsx`
+- `src/components/chat/ChatMessage.tsx`
+- `src/components/chat/QuickActions.tsx`
+- `src/components/chat/VoiceOrbModal.tsx`
+- `src/components/chat/index.ts`
+- `src/components/ui/voice-powered-orb.tsx`
+- `src/components/ui/shiny-button.tsx`
+- `src/components/ui/shiny-button.css`
+- `src/lib/stream-chat.ts`
+- `src/hooks/use-speech.ts`
+- `src/hooks/use-footer-collision.ts`
 
-### 2. Update Blog Post page (`src/pages/BlogPost.tsx`)
+**Files to edit:**
+- `src/components/layout/Layout.tsx` -- Remove the lazy import and `<VoiceAssistantWidget />` rendering
 
-- Wrap the main content area (below the header) in a `div` with `className="blog-light"`
-- The header/footer remain outside this wrapper, staying dark
-- Adjust the progress bar, article text, sidebar, blockquotes, and cards to use the CSS variable-driven colors (which they already do via `text-foreground`, `bg-card`, etc.)
+### 2. Edge Functions (Lovable Cloud backend)
 
-### 3. Update Blog listing page (`src/pages/Blog.tsx`)
+**Files to delete:**
+- `supabase/functions/hyrx-chat/index.ts`
+- `supabase/functions/hyrx-chat/hyrx-knowledge.ts`
+- `supabase/functions/send-contact-email/index.ts`
+- `supabase/config.toml`
 
-- Apply `blog-light` class to the article grid section below the hero
-- The hero/header stays dark for visual impact
-- Category filter pills and article cards adapt automatically through CSS variables
+Note: You'll need to re-create `send-contact-email` on your personal Supabase project if you still want the contact form to work.
 
-### 4. Header and footer handling
+### 3. Supabase Client (reconnect to your own project)
 
-- The `SiteHeader` and `SiteFooter` remain in the dark scope (outside the `.blog-light` wrapper)
-- No changes needed to these components
+**Files to update:**
+- `src/integrations/supabase/client.ts` -- Update to use your personal Supabase URL and anon key
+- `src/integrations/supabase/types.ts` -- Regenerate from your personal Supabase project using `supabase gen types`
+- `.env` -- Update `VITE_SUPABASE_URL`, `VITE_SUPABASE_PUBLISHABLE_KEY`, and `VITE_SUPABASE_PROJECT_ID` to your personal Supabase values
 
-### 5. Table of Contents sidebar (`src/components/blog/TableOfContents.tsx`)
+### 4. Contact Form (`src/pages/Contact.tsx`)
 
-- Already uses semantic color classes (`text-foreground`, `bg-card`, etc.)
-- Will automatically adapt inside the `.blog-light` wrapper
-- Minor tweaks if needed for border/hover contrast
+Currently calls `supabase.functions.invoke("send-contact-email")`. After migration, you'll need to either:
+- Deploy the `send-contact-email` edge function to your personal Supabase project, OR
+- Replace with a different email service (e.g., Cloudflare Workers + Brevo API)
 
-### Files Modified
-- `src/index.css` -- add `.blog-light` variable overrides
-- `src/pages/BlogPost.tsx` -- wrap content in light scope
-- `src/pages/Blog.tsx` -- wrap article grid in light scope
-- Minor adjustments to `TableOfContents.tsx` if contrast needs tuning
+### 5. Secrets to Recreate on Your Personal Supabase
+
+These secrets currently live in Lovable Cloud and must be set up in your own Supabase project's Edge Function secrets:
+- `BREVO_API_KEY`
+- `RECAPTCHA_SECRET_KEY`
+- `FROM_EMAIL`
+- `REPLY_TO_EMAIL`
+- `INTERNAL_NOTIFY_EMAIL`
+- `GOOGLE_CLOUD_API_KEY`
+- `LOVABLE_API_KEY` (only if you keep the chatbot -- otherwise not needed)
+
+---
+
+## Summary Checklist
+
+| Item | Action |
+|------|--------|
+| Voice Assistant chatbot | Delete all 11 files + remove from Layout |
+| Edge functions (hyrx-chat, send-contact-email) | Delete from repo; re-deploy send-contact-email to your Supabase |
+| supabase/config.toml | Delete (recreate for your own Supabase if needed) |
+| Supabase client + types | Point to your personal Supabase project |
+| .env variables | Update to your Supabase credentials |
+| Secrets (Brevo, reCAPTCHA, etc.) | Set up in your Supabase dashboard |
+| Cloudflare Pages | Connect GitHub repo, set Vite build, add custom domain |
+
+### What stays unchanged
+- All pages, routing, styles, SEO, components, blog, etc. -- no visual changes
+- The `@supabase/supabase-js` dependency stays (you're just switching which Supabase project it connects to)
 
