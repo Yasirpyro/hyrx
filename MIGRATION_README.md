@@ -59,11 +59,15 @@ Go to **Supabase Dashboard → Settings → Edge Functions → Secrets** and add
 | Secret | Description |
 |--------|-------------|
 | `BREVO_API_KEY` | Your Brevo (Sendinblue) API key |
-| `RECAPTCHA_SECRET_KEY` | Google reCAPTCHA Enterprise secret |
 | `GOOGLE_CLOUD_API_KEY` | Google Cloud API key (for reCAPTCHA verification) |
+| `GOOGLE_CLOUD_PROJECT_ID` | Your Google Cloud project ID used for reCAPTCHA Enterprise |
+| `RECAPTCHA_SITE_KEY` | The same site key used by the frontend script (`grecaptcha.execute`) |
 | `FROM_EMAIL` | Sender email, e.g. `no-reply@hyrx.tech` |
 | `REPLY_TO_EMAIL` | Reply-to email, e.g. `contact@hyrx.tech` |
 | `INTERNAL_NOTIFY_EMAIL` | Where internal notifications go, e.g. `contact@hyrx.tech` |
+| `ALLOWED_ORIGINS` | Comma-separated CORS origins, e.g. `https://hyrx.tech,https://www.hyrx.tech,http://localhost:5173,http://localhost:8080` |
+
+> `RECAPTCHA_SECRET_KEY` is only needed if you switch to classic `siteverify`. The restored function uses reCAPTCHA Enterprise assessment API.
 
 ### 4. Deploy to Cloudflare Pages
 

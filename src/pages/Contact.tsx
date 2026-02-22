@@ -28,6 +28,7 @@ const budgetRanges = [
 ];
 
 export default function Contact() {
+  const recaptchaSiteKey = import.meta.env.VITE_RECAPTCHA_SITE_KEY || "6LfONTwsAAAAANWWtBiaTd34TbaP0_Vx7qUf-GiY";
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState({
@@ -52,11 +53,11 @@ export default function Contact() {
   useEffect(() => {
     if (document.querySelector('script[src*="recaptcha"]')) return;
     const script = document.createElement("script");
-    script.src = "https://www.google.com/recaptcha/enterprise.js?render=6LfONTwsAAAAANWWtBiaTd34TbaP0_Vx7qUf-GiY";
+    script.src = `https://www.google.com/recaptcha/enterprise.js?render=${recaptchaSiteKey}`;
     script.async = true;
     script.defer = true;
     document.body.appendChild(script);
-  }, []);
+  }, [recaptchaSiteKey]);
 
   const getRecaptchaToken = (action: string) =>
     new Promise<string>((resolve, reject) => {
@@ -74,7 +75,7 @@ export default function Contact() {
 
       api.ready(() => {
         try {
-          Promise.resolve(api.execute("6LfONTwsAAAAANWWtBiaTd34TbaP0_Vx7qUf-GiY", { action }))
+          Promise.resolve(api.execute(recaptchaSiteKey, { action }))
             .then((token: string) => {
               window.clearTimeout(timeout);
               resolve(token);
