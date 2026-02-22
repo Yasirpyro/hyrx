@@ -281,13 +281,24 @@ export default function BlogPost() {
               <div className="max-w-3xl h-px bg-gradient-to-r from-primary/50 via-accent/30 to-transparent" />
             </div>
 
+            {/* Top ad — between header divider and article */}
+            <div className="mb-8">
+              <AdUnit format="horizontal" slot="4386922121" />
+            </div>
+
             <article className="max-w-2xl">
               <Reveal>
                 <RenderContent content={post.content} />
               </Reveal>
 
+              {/* Mid-article ad */}
               <div className="my-10">
-                <AdUnit format="horizontal" />
+                <AdUnit format="rectangle" slot="4386922121" />
+              </div>
+
+              {/* Bottom ad — after article content */}
+              <div className="my-10">
+                <AdUnit format="horizontal" slot="4386922121" />
               </div>
 
               <Reveal>
