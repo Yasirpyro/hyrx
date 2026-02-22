@@ -62,31 +62,31 @@ export function useSmoothScroll() {
       return;
     }
 
-    // Create Lenis instance with premium settings
-    const lenis = new Lenis({
-      duration: 1.2, // Smooth duration - higher = smoother but slower
-      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // Exponential ease-out
-      orientation: "vertical",
-      gestureOrientation: "vertical",
-      smoothWheel: true,
-      wheelMultiplier: 1,
-      touchMultiplier: 2,
-      infinite: false,
-    });
+    // Defer Lenis creation to avoid forced reflow during initial render
+    let lenis: Lenis;
+    const initTimeout = setTimeout(() => {
+      lenis = new Lenis({
+        duration: 1.2,
+        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+        orientation: "vertical",
+        gestureOrientation: "vertical",
+        smoothWheel: true,
+        wheelMultiplier: 1,
+        touchMultiplier: 2,
+        infinite: false,
+      });
 
-    lenisRef.current = lenis;
-    lenisInstance = lenis;
+      lenisRef.current = lenis;
+      lenisInstance = lenis;
 
-    // Integrate Lenis with GSAP ScrollTrigger
-    lenis.on("scroll", ScrollTrigger.update);
+      lenis.on("scroll", ScrollTrigger.update);
 
-    // Use GSAP's ticker for smooth RAF loop
-    gsap.ticker.add((time) => {
-      lenis.raf(time * 1000);
-    });
+      gsap.ticker.add((time) => {
+        lenis.raf(time * 1000);
+      });
 
-    // Disable GSAP's lagSmooth for better Lenis integration
-    gsap.ticker.lagSmoothing(0);
+      gsap.ticker.lagSmoothing(0);
+    }, 100);
 
     // Configure ScrollTrigger defaults for premium feel
     ScrollTrigger.defaults({
@@ -103,8 +103,8 @@ export function useSmoothScroll() {
           e.preventDefault();
           const targetElement = document.querySelector(href);
           if (targetElement) {
-            lenis.scrollTo(targetElement as HTMLElement, {
-              offset: -100, // Account for fixed header
+            lenisRef.current?.scrollTo(targetElement as HTMLElement, {
+              offset: -100,
               duration: 1.2,
             });
           }
@@ -114,7 +114,6 @@ export function useSmoothScroll() {
 
     document.addEventListener("click", handleAnchorClick);
 
-    // Refresh ScrollTrigger on resize
     const handleResize = () => {
       ScrollTrigger.refresh();
     };
@@ -122,7 +121,7 @@ export function useSmoothScroll() {
     window.addEventListener("resize", handleResize);
 
     return () => {
-      // Cleanup
+      clearTimeout(initTimeout);
       document.removeEventListener("click", handleAnchorClick);
       window.removeEventListener("resize", handleResize);
 
@@ -130,7 +129,7 @@ export function useSmoothScroll() {
         cancelAnimationFrame(rafIdRef.current);
       }
 
-      lenis.destroy();
+      lenisRef.current?.destroy();
       lenisRef.current = null;
       lenisInstance = null;
 
