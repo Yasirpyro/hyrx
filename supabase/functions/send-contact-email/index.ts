@@ -15,7 +15,7 @@ const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
 
 const allowedOrigins = (Deno.env.get("ALLOWED_ORIGINS") || "https://hyrx.tech,https://www.hyrx.tech,http://localhost:5173,http://localhost:8080")
   .split(",")
-  .map((origin) => origin.trim())
+  .map((origin: string) => origin.trim())
   .filter(Boolean);
 
 const getCorsHeaders = (origin: string | null) => {
@@ -201,7 +201,7 @@ serve(async (req: Request) => {
     }
 
     const servicesLabel = services.length > 0
-      ? services.map((value) => SERVICE_LABELS[value] || value).join(", ")
+      ? services.map((value: string) => SERVICE_LABELS[value] || value).join(", ")
       : "Not specified";
     const budgetLabel = budget ? (BUDGET_LABELS[budget] || budget) : "Not specified";
 
