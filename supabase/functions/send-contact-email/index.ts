@@ -201,24 +201,99 @@ serve(async (req: Request) => {
     const safeCompany = company ? escapeHtml(company) : "Not provided";
     const safeMessage = escapeHtml(message).replaceAll("\n", "<br>");
 
-    const userHtml = `
-      <h2>Thanks for contacting HYRX, ${safeName}!</h2>
-      <p>We received your request and will respond within 1-2 business days.</p>
-      <p><strong>Services:</strong> ${servicesLabel}</p>
-      <p><strong>Budget:</strong> ${budgetLabel}</p>
-      <p><strong>Message:</strong><br>${safeMessage}</p>
-      <p>Best regards,<br>HYRX Team</p>
-    `;
+    const emailBase = (headerAccent: string, headerLabel: string, bodyContent: string) => `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>${headerLabel}</title>
+</head>
+<body style="margin:0;padding:0;background-color:#090b18;font-family:'Segoe UI',Arial,sans-serif;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background-color:#090b18;padding:32px 0;">
+    <tr>
+      <td align="center">
+        <table width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;">
 
-    const internalHtml = `
-      <h2>New contact submission</h2>
-      <p><strong>Name:</strong> ${safeName}</p>
-      <p><strong>Email:</strong> ${safeEmail}</p>
-      <p><strong>Company:</strong> ${safeCompany}</p>
-      <p><strong>Services:</strong> ${servicesLabel}</p>
-      <p><strong>Budget:</strong> ${budgetLabel}</p>
-      <p><strong>Message:</strong><br>${safeMessage}</p>
-    `;
+          <!-- Logo Header -->
+          <tr>
+            <td align="center" style="padding:0 0 24px 0;">
+              <img src="https://hyrx.tech/brandlogo.png" alt="HYRX" width="120" style="display:block;height:auto;" />
+            </td>
+          </tr>
+
+          <!-- Gradient accent bar -->
+          <tr>
+            <td style="height:3px;background:linear-gradient(90deg,#00d4f5 0%,#ff1ab5 100%);border-radius:2px 2px 0 0;"></td>
+          </tr>
+
+          <!-- Card body -->
+          <tr>
+            <td style="background-color:#0d1122;border-radius:0 0 12px 12px;padding:36px 40px 32px 40px;">
+
+              <!-- Header label -->
+              <p style="margin:0 0 20px 0;font-size:11px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:${headerAccent};">${headerLabel}</p>
+
+              ${bodyContent}
+
+              <!-- Divider -->
+              <table width="100%" cellpadding="0" cellspacing="0" style="margin:32px 0 28px;">
+                <tr><td style="height:1px;background-color:#1e2240;"></td></tr>
+              </table>
+
+              <!-- Footer -->
+              <table width="100%" cellpadding="0" cellspacing="0">
+                <tr>
+                  <td>
+                    <p style="margin:0;font-size:12px;color:#3a4060;">© 2026 HYRX. All rights reserved.</p>
+                    <p style="margin:4px 0 0 0;font-size:12px;"><a href="https://hyrx.tech" style="color:#00d4f5;text-decoration:none;">hyrx.tech</a></p>
+                  </td>
+                  <td align="right" valign="middle">
+                    <img src="https://hyrx.tech/brandlogo.png" alt="HYRX" width="52" style="height:auto;opacity:0.4;" />
+                  </td>
+                </tr>
+              </table>
+
+            </td>
+          </tr>
+
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>`;
+
+    const row = (label: string, value: string) => `
+      <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:12px;">
+        <tr>
+          <td style="padding:12px 16px;background-color:#111528;border-radius:8px;border-left:3px solid #00d4f5;">
+            <p style="margin:0 0 2px 0;font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#00d4f5;">${label}</p>
+            <p style="margin:0;font-size:14px;color:#d0d8f0;line-height:1.6;">${value}</p>
+          </td>
+        </tr>
+      </table>`;
+
+    const userHtml = emailBase("#00d4f5", "Message Received", `
+      <h1 style="margin:0 0 8px 0;font-size:24px;font-weight:700;color:#f0f5ff;line-height:1.3;">Thanks for reaching out, ${safeName}!</h1>
+      <p style="margin:0 0 28px 0;font-size:15px;color:#8892b0;line-height:1.6;">We've received your request and will get back to you within <span style="color:#00d4f5;font-weight:600;">1–2 business days</span>.</p>
+      ${row("Services Requested", servicesLabel)}
+      ${row("Budget Range", budgetLabel)}
+      ${row("Your Message", safeMessage)}
+      <p style="margin:28px 0 0 0;font-size:14px;color:#8892b0;">In the meantime, explore what we build at <a href="https://hyrx.tech" style="color:#00d4f5;text-decoration:none;">hyrx.tech</a>.</p>
+      <p style="margin:16px 0 0 0;font-size:14px;color:#8892b0;">Best regards,<br/><span style="color:#f0f5ff;font-weight:600;">The HYRX Team</span></p>
+    `);
+
+    const internalHtml = emailBase("#ff1ab5", "New Quote Request", `
+      <h1 style="margin:0 0 8px 0;font-size:22px;font-weight:700;color:#f0f5ff;line-height:1.3;">New submission from ${safeName}</h1>
+      <p style="margin:0 0 28px 0;font-size:14px;color:#8892b0;">A new contact form was submitted on <span style="color:#ff1ab5;font-weight:600;">hyrx.tech</span>.</p>
+      ${row("Full Name", safeName)}
+      ${row("Email", `<a href="mailto:${safeEmail}" style="color:#00d4f5;text-decoration:none;">${safeEmail}</a>`)}
+      ${row("Company", safeCompany)}
+      ${row("Services", servicesLabel)}
+      ${row("Budget", budgetLabel)}
+      ${row("Message", safeMessage)}
+    `);
 
     const userEmail = await sendBrevoEmail({
       to: [{ email, name }],
