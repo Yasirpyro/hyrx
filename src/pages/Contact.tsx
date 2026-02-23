@@ -51,9 +51,20 @@ export default function Contact() {
 
   // Lazy-load reCAPTCHA script when Contact page mounts
   useEffect(() => {
-    if (document.querySelector('script[src*="recaptcha"]')) return;
+    const scriptId = "hyrx-recaptcha-enterprise";
+    const src = `https://www.google.com/recaptcha/enterprise.js?render=${encodeURIComponent(recaptchaSiteKey)}`;
+    const existing = document.getElementById(scriptId) as HTMLScriptElement | null;
+
+    if (existing) {
+      if (existing.src !== src) {
+        existing.src = src;
+      }
+      return;
+    }
+
     const script = document.createElement("script");
-    script.src = `https://www.google.com/recaptcha/enterprise.js?render=${recaptchaSiteKey}`;
+    script.id = scriptId;
+    script.src = src;
     script.async = true;
     script.defer = true;
     document.body.appendChild(script);
@@ -62,10 +73,10 @@ export default function Contact() {
   const getRecaptchaToken = (action: string) =>
     new Promise<string>((resolve, reject) => {
       const grecaptchaAny = (window as any).grecaptcha;
-      const api = grecaptchaAny?.enterprise ?? grecaptchaAny;
+      const api = grecaptchaAny?.enterprise;
 
       if (!api || typeof api.ready !== "function" || typeof api.execute !== "function") {
-        reject(new Error("reCAPTCHA not loaded"));
+        reject(new Error("reCAPTCHA Enterprise not loaded"));
         return;
       }
 
