@@ -28,7 +28,8 @@ const budgetRanges = [
 ];
 
 export default function Contact() {
-  const recaptchaSiteKey = import.meta.env.VITE_RECAPTCHA_SITE_KEY || "6LfONTwsAAAAANWWtBiaTd34TbaP0_Vx7qUf-GiY";
+  // Public site key (ID) — NOT the secret key
+  const recaptchaSiteKey = "6LfONTwsAAAAANWWtBiaTd34TbaP0_Vx7qUf-GiY";
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState({
