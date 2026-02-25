@@ -20,6 +20,10 @@ import Terms from "./pages/legal/Terms";
 import Blog from "./pages/Blog";
 import BlogPost from "./pages/BlogPost";
 import NotFound from "./pages/NotFound";
+import AgentsPage from "./pages/agents/Agents";
+import AgentDetailPage from "./pages/agents/AgentDetail";
+import AgentFrameworkIndexPage from "./pages/agents/AgentFrameworkIndex";
+import AgentIndustryIndexPage from "./pages/agents/AgentIndustryIndex";
 
 const queryClient = new QueryClient();
 
@@ -45,6 +49,11 @@ const App = () => (
                 <Route path="/contact" element={<Contact />} />
                 <Route path="/blog" element={<Blog />} />
                 <Route path="/blog/:slug" element={<BlogPost />} />
+                <Route path="/agents" element={<AgentsPage />} />
+                <Route path="/agents/page/:pageNumber" element={<AgentsPage />} />
+                <Route path="/agents/:slug" element={<AgentDetailPage />} />
+                <Route path="/agents/frameworks/:framework" element={<AgentFrameworkIndexPage />} />
+                <Route path="/agents/industry/:industry" element={<AgentIndustryIndexPage />} />
                 <Route path="/legal/privacy-policy" element={<PrivacyPolicy />} />
                 <Route path="/legal/terms" element={<Terms />} />
                 <Route path="*" element={<NotFound />} />

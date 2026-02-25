@@ -53,6 +53,168 @@ export type Database = {
         }
         Relationships: []
       }
+      prompt_versions: {
+        Row: {
+          content: string
+          created_at: string
+          framework: string
+          id: string
+          prompt_id: string
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          framework: string
+          id?: string
+          prompt_id: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          framework?: string
+          id?: string
+          prompt_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "prompt_versions_prompt_id_fkey"
+            columns: ["prompt_id"]
+            isOneToOne: false
+            referencedRelation: "prompts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      prompts: {
+        Row: {
+          complexity: string
+          created_at: string
+          description: string
+          framework: string
+          id: string
+          industry: string
+          model_compatibility: string[]
+          notes: string
+          rating_avg: number
+          rating_count: number
+          saves_count: number
+          search_vector: unknown | null
+          slug: string
+          status: string
+          system_prompt: string
+          tags: string[]
+          title: string
+          updated_at: string
+          use_case_type: string
+          variables: string[]
+        }
+        Insert: {
+          complexity: string
+          created_at?: string
+          description: string
+          framework: string
+          id?: string
+          industry: string
+          model_compatibility?: string[]
+          notes?: string
+          rating_avg?: number
+          rating_count?: number
+          saves_count?: number
+          search_vector?: unknown | null
+          slug: string
+          status?: string
+          system_prompt: string
+          tags?: string[]
+          title: string
+          updated_at?: string
+          use_case_type: string
+          variables?: string[]
+        }
+        Update: {
+          complexity?: string
+          created_at?: string
+          description?: string
+          framework?: string
+          id?: string
+          industry?: string
+          model_compatibility?: string[]
+          notes?: string
+          rating_avg?: number
+          rating_count?: number
+          saves_count?: number
+          search_vector?: unknown | null
+          slug?: string
+          status?: string
+          system_prompt?: string
+          tags?: string[]
+          title?: string
+          updated_at?: string
+          use_case_type?: string
+          variables?: string[]
+        }
+        Relationships: []
+      }
+      ratings: {
+        Row: {
+          created_at: string
+          fingerprint: string
+          id: string
+          prompt_id: string
+          score: number
+        }
+        Insert: {
+          created_at?: string
+          fingerprint: string
+          id?: string
+          prompt_id: string
+          score: number
+        }
+        Update: {
+          created_at?: string
+          fingerprint?: string
+          id?: string
+          prompt_id?: string
+          score?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ratings_prompt_id_fkey"
+            columns: ["prompt_id"]
+            isOneToOne: false
+            referencedRelation: "prompts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      saves: {
+        Row: {
+          created_at: string
+          fingerprint: string
+          id: string
+          prompt_id: string
+        }
+        Insert: {
+          created_at?: string
+          fingerprint: string
+          id?: string
+          prompt_id: string
+        }
+        Update: {
+          created_at?: string
+          fingerprint?: string
+          id?: string
+          prompt_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "saves_prompt_id_fkey"
+            columns: ["prompt_id"]
+            isOneToOne: false
+            referencedRelation: "prompts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_roles: {
         Row: {
           created_at: string
@@ -85,6 +247,18 @@ export type Database = {
           _user_id: string
         }
         Returns: boolean
+      }
+      refresh_prompt_saves_count: {
+        Args: {
+          p_prompt_id: string
+        }
+        Returns: undefined
+      }
+      update_prompt_rating_avg: {
+        Args: {
+          p_prompt_id: string
+        }
+        Returns: undefined
       }
     }
     Enums: {

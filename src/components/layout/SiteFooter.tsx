@@ -9,6 +9,7 @@ const footerLinks = {
     { label: "3D & AR Modelling", href: "/services/3d-ar-modelling" },
   ],
   company: [
+    { label: "Agent Library", href: "/agents" },
     { label: "About", href: "/about" },
     { label: "Work", href: "/work" },
     { label: "Contact", href: "/contact" },
