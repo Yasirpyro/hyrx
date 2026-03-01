@@ -52,7 +52,7 @@ const AGENT_FAQ = [
   },
   {
     q: "What models work with these prompts?",
-    a: "Each prompt lists its tested models — typically GPT-4o, Claude 3.5 Sonnet, Gemini 1.5 Pro, Llama 3, and Mistral Large. You can filter the library by model compatibility to find prompts that match your provider.",
+    a: "Each prompt lists its tested models — typically GPT-5.2, Claude 4.6 Sonnet, Gemini 3 Pro, Llama 4, and Mistral Large. You can filter the library by model compatibility to find prompts that match your provider.",
   },
 ];
 
@@ -191,7 +191,7 @@ export default function AgentsPage() {
   return (
     <Layout>
       <SEO
-        title="Free AI Agent Prompt Library — System Prompts for n8n, LangChain, CrewAI & More"
+        title="Free AI Agent Prompt Library System Prompts for n8n, LangChain, CrewAI & More"
         description={`Browse ${total || stats?.promptCount || 0}+ free, copy-ready AI agent system prompts. Filter by framework (n8n, LangChain, LangGraph, CrewAI, AutoGen), industry, complexity, and LLM model. Production-tested and open to use.`}
         breadcrumbs={[
           { name: "Home", url: "https://hyrx.tech/" },
@@ -229,7 +229,7 @@ export default function AgentsPage() {
             <span>AI Agent Library</span>
           </p>
           <h1 className="text-display max-w-4xl">
-            Free <span className="gradient-text">AI Agent Prompts</span> — Copy, Paste &amp; Deploy
+            Free <span className="gradient-text">AI Agent Prompts</span> Copy, Paste &amp; Deploy
           </h1>
           <p className="text-body-lg max-w-3xl">
             Production-tested system prompts for <strong>n8n</strong>, <strong>LangChain</strong>,{" "}
