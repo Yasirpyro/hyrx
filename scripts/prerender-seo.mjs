@@ -52,9 +52,65 @@ const routeMeta = {
       "Deep-dives on autonomous agents, enterprise ROI, regulation, ethics, and market shifts shaping AI adoption.",
   },
   "/agents": {
-    title: "AI Agent Prompt Library | HYRX",
+    title: "Free AI Agent Prompt Library — System Prompts for n8n, LangChain, CrewAI & More | HYRX",
     description:
-      "Browse production-ready system prompts for n8n, LangChain, LangGraph, CrewAI, and AutoGen across industries.",
+      "Browse 50+ free, copy-ready AI agent system prompts. Filter by framework (n8n, LangChain, LangGraph, CrewAI, AutoGen), industry, complexity, and LLM model.",
+  },
+  "/agents/frameworks/n8n": {
+    title: "Free n8n AI Agent Prompts — System Prompts for n8n | HYRX",
+    description: "Browse free n8n AI agent system prompts. Copy production-ready, node-first automation prompts built for n8n workflows.",
+  },
+  "/agents/frameworks/langchain": {
+    title: "Free LangChain AI Agent Prompts — System Prompts for LangChain | HYRX",
+    description: "Browse free LangChain AI agent system prompts. Copy production-ready prompts optimized for tool-calling, composable chains, and RAG.",
+  },
+  "/agents/frameworks/langgraph": {
+    title: "Free LangGraph AI Agent Prompts — System Prompts for LangGraph | HYRX",
+    description: "Browse free LangGraph AI agent system prompts. Copy stateful, multi-step execution prompts designed for durable agent workflows.",
+  },
+  "/agents/frameworks/crewai": {
+    title: "Free CrewAI AI Agent Prompts — System Prompts for CrewAI | HYRX",
+    description: "Browse free CrewAI AI agent system prompts. Copy role-based prompts built for collaborative multi-agent crews.",
+  },
+  "/agents/frameworks/autogen": {
+    title: "Free AutoGen AI Agent Prompts — System Prompts for AutoGen | HYRX",
+    description: "Browse free AutoGen AI agent system prompts. Copy message-driven, multi-agent coordination prompts.",
+  },
+  "/agents/frameworks/raw": {
+    title: "Free Raw AI Agent Prompts — Framework-Agnostic System Prompts | HYRX",
+    description: "Browse free raw AI agent system prompts. Provider-agnostic system prompts with no framework wrapper — works with any LLM API.",
+  },
+  "/agents/industry/Business%20Ops": {
+    title: "Free Business Ops AI Agent Prompts | HYRX",
+    description: "AI agent system prompts for Business Ops. Production-ready prompts for workflow automation, process optimization, and operations.",
+  },
+  "/agents/industry/Marketing": {
+    title: "Free Marketing AI Agent Prompts | HYRX",
+    description: "AI agent system prompts for Marketing. Production-ready prompts for content, campaigns, SEO, and audience analysis.",
+  },
+  "/agents/industry/Compliance": {
+    title: "Free Compliance AI Agent Prompts | HYRX",
+    description: "AI agent system prompts for Compliance. Production-ready prompts for regulatory checks, policy enforcement, and audit.",
+  },
+  "/agents/industry/DevOps": {
+    title: "Free DevOps AI Agent Prompts | HYRX",
+    description: "AI agent system prompts for DevOps. Production-ready prompts for CI/CD, incident response, infrastructure, and monitoring.",
+  },
+  "/agents/industry/Customer%20Support": {
+    title: "Free Customer Support AI Agent Prompts | HYRX",
+    description: "AI agent system prompts for Customer Support. Production-ready prompts for ticket triage, routing, escalation, and resolution.",
+  },
+  "/agents/industry/Research": {
+    title: "Free Research AI Agent Prompts | HYRX",
+    description: "AI agent system prompts for Research. Production-ready prompts for literature review, data analysis, and synthesis.",
+  },
+  "/agents/industry/Finance": {
+    title: "Free Finance AI Agent Prompts | HYRX",
+    description: "AI agent system prompts for Finance. Production-ready prompts for risk analysis, reporting, forecasting, and compliance.",
+  },
+  "/agents/industry/eCommerce": {
+    title: "Free eCommerce AI Agent Prompts | HYRX",
+    description: "AI agent system prompts for eCommerce. Production-ready prompts for product recommendations, inventory, and customer flows.",
   },
   "/legal/privacy-policy": {
     title: "Privacy Policy | HYRX",
@@ -98,6 +154,31 @@ function getRouteMeta(route) {
       title: `${titleizeSlug(slug)} | HYRX Services`,
       description:
         "Explore HYRX implementation services designed for reliable delivery and measurable business outcomes.",
+    };
+  }
+
+  if (route.startsWith("/agents/frameworks/") && route.length > "/agents/frameworks/".length) {
+    const framework = route.replace("/agents/frameworks/", "");
+    const label = titleizeSlug(framework);
+    return {
+      title: `Free ${label} AI Agent Prompts — System Prompts for ${label} | HYRX`,
+      description: `Browse free ${label} AI agent system prompts. Copy production-ready prompts for ${label} workflows.`,
+    };
+  }
+
+  if (route.startsWith("/agents/industry/") && route.length > "/agents/industry/".length) {
+    const industry = decodeURIComponent(route.replace("/agents/industry/", ""));
+    return {
+      title: `Free ${industry} AI Agent Prompts | HYRX`,
+      description: `AI agent system prompts for ${industry}. Production-ready prompts across n8n, LangChain, LangGraph, CrewAI, and AutoGen.`,
+    };
+  }
+
+  if (route.startsWith("/agents/") && route.length > "/agents/".length && !route.includes("/page/")) {
+    const slug = route.replace("/agents/", "");
+    return {
+      title: `${titleizeSlug(slug)} — Free AI Agent Prompt | HYRX`,
+      description: `Copy this free, production-ready AI agent system prompt. Works with n8n, LangChain, LangGraph, CrewAI, and more.`,
     };
   }
 

@@ -13,9 +13,9 @@ import { usePromptSave } from "@/hooks/usePromptSave";
 import { usePromptRating } from "@/hooks/usePromptRating";
 import { supabase } from "@/integrations/supabase/client";
 import { PromptSchema, PromptVersionSchema, type AgentFramework } from "@/types/agents";
-import { FRAMEWORK_LABELS } from "@/features/agents/utils";
+import { FRAMEWORK_LABELS, toTitleCase } from "@/features/agents/utils";
 import { useQuery } from "@tanstack/react-query";
-import { Heart } from "lucide-react";
+import { Heart, ChevronRight } from "lucide-react";
 
 export default function AgentDetailPage() {
   const { slug } = useParams();
@@ -101,33 +101,81 @@ export default function AgentDetailPage() {
   return (
     <Layout>
       <SEO
-        title={`${prompt.title} Blueprint`}
-        description={prompt.description}
+        title={`${prompt.title} — Free ${FRAMEWORK_LABELS[prompt.framework]} Agent Prompt`}
+        description={`${prompt.description} Copy this free ${toTitleCase(prompt.complexity)} ${FRAMEWORK_LABELS[prompt.framework]} system prompt for ${prompt.industry}. Works with ${prompt.model_compatibility.slice(0, 3).join(", ")}.`}
         image="/brandlogo.png"
         breadcrumbs={[
           { name: "Home", url: "https://hyrx.tech/" },
-          { name: "Agents", url: "https://hyrx.tech/agents" },
+          { name: "AI Agent Library", url: "https://hyrx.tech/agents" },
           {
             name: prompt.industry,
             url: `https://hyrx.tech/agents/industry/${encodeURIComponent(prompt.industry)}`,
           },
           { name: prompt.title, url: `https://hyrx.tech/agents/${prompt.slug}` },
         ]}
+        schema={{
+          "@context": "https://schema.org",
+          "@type": "SoftwareSourceCode",
+          name: prompt.title,
+          description: prompt.description,
+          url: `https://hyrx.tech/agents/${prompt.slug}`,
+          codeRepository: "https://hyrx.tech/agents",
+          programmingLanguage: FRAMEWORK_LABELS[prompt.framework],
+          runtimePlatform: prompt.model_compatibility.join(", "),
+          applicationCategory: "AI Agent System Prompt",
+          keywords: [
+            ...prompt.tags,
+            prompt.industry,
+            FRAMEWORK_LABELS[prompt.framework],
+            "AI agent prompt",
+            "system prompt",
+            prompt.complexity,
+          ].join(", "),
+          aggregateRating: prompt.rating_count > 0
+            ? {
+                "@type": "AggregateRating",
+                ratingValue: prompt.rating_avg.toFixed(1),
+                ratingCount: prompt.rating_count,
+                bestRating: 5,
+                worstRating: 1,
+              }
+            : undefined,
+          author: {
+            "@type": "Organization",
+            name: "HYRX",
+            url: "https://hyrx.tech",
+          },
+          dateCreated: prompt.created_at,
+          dateModified: prompt.updated_at,
+        }}
       />
 
       <section className="pt-32 pb-10">
         <div className="container-main space-y-4">
-          <p className="text-sm text-muted-foreground">
-            <Link to="/">Home</Link> → <Link to="/agents">Agents</Link> → {" "}
-            <Link to={`/agents/industry/${encodeURIComponent(prompt.industry)}`}>
+          <nav className="flex flex-wrap items-center gap-1 text-sm text-muted-foreground" aria-label="Breadcrumb">
+            <Link to="/" className="hover:text-primary transition-colors">Home</Link>
+            <ChevronRight className="h-3 w-3" />
+            <Link to="/agents" className="hover:text-primary transition-colors">Agent Library</Link>
+            <ChevronRight className="h-3 w-3" />
+            <Link to={`/agents/industry/${encodeURIComponent(prompt.industry)}`} className="hover:text-primary transition-colors">
               {prompt.industry}
-            </Link>{" "}
-            → {prompt.title}
-          </p>
+            </Link>
+            <ChevronRight className="h-3 w-3" />
+            <span className="text-foreground">{prompt.title}</span>
+          </nav>
           <div className="flex flex-wrap items-center gap-2">
-            <Badge variant="outline">{FRAMEWORK_LABELS[prompt.framework]}</Badge>
-            <Badge variant="outline">{prompt.industry}</Badge>
-            <Badge variant="outline">{prompt.complexity}</Badge>
+            <Link to={`/agents/frameworks/${prompt.framework}`}>
+              <Badge variant="outline" className="hover:border-primary/40 transition-colors">
+                {FRAMEWORK_LABELS[prompt.framework]}
+              </Badge>
+            </Link>
+            <Link to={`/agents/industry/${encodeURIComponent(prompt.industry)}`}>
+              <Badge variant="outline" className="hover:border-primary/40 transition-colors">
+                {prompt.industry}
+              </Badge>
+            </Link>
+            <Badge variant="outline">{toTitleCase(prompt.complexity)}</Badge>
+            <Badge variant="outline">{toTitleCase(prompt.use_case_type)}</Badge>
           </div>
           <h1 className="text-headline">{prompt.title}</h1>
           <p className="text-body-lg max-w-3xl">{prompt.description}</p>
@@ -171,6 +219,9 @@ export default function AgentDetailPage() {
 
           <div className="space-y-3">
             <h2 className="text-title">Compatible Models</h2>
+            <p className="text-sm text-muted-foreground">
+              This prompt has been tested with the following large language models:
+            </p>
             <div className="flex flex-wrap gap-2">
               {prompt.model_compatibility.map((model) => (
                 <Badge key={model} variant="outline">
@@ -180,16 +231,41 @@ export default function AgentDetailPage() {
             </div>
           </div>
 
-          <ExportActions prompt={prompt} versions={versions} activeContent={activeContent} />
-
-          <div className="space-y-4">
-            <h2 className="text-title">Related Prompts</h2>
-            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-              {related.map((item) => (
-                <PromptCard key={item.id} prompt={item} />
+          <div className="space-y-3">
+            <h2 className="text-title">Tags</h2>
+            <div className="flex flex-wrap gap-2">
+              {prompt.tags.map((tag) => (
+                <Link key={tag} to={`/agents?q=${encodeURIComponent(tag)}`}>
+                  <Badge variant="secondary" className="cursor-pointer hover:bg-primary/20 transition-colors">
+                    #{tag}
+                  </Badge>
+                </Link>
               ))}
             </div>
           </div>
+
+          <ExportActions prompt={prompt} versions={versions} activeContent={activeContent} />
+
+          {related.length > 0 && (
+            <div className="space-y-4">
+              <h2 className="text-title">Related {prompt.industry} Prompts</h2>
+              <p className="text-sm text-muted-foreground">
+                More AI agent system prompts for {prompt.industry} — same industry, different use cases.
+              </p>
+              <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                {related.map((item) => (
+                  <PromptCard key={item.id} prompt={item} />
+                ))}
+              </div>
+              <div className="pt-2">
+                <Button asChild variant="outline">
+                  <Link to={`/agents/industry/${encodeURIComponent(prompt.industry)}`}>
+                    Browse all {prompt.industry} prompts →
+                  </Link>
+                </Button>
+              </div>
+            </div>
+          )}
         </div>
       </Section>
     </Layout>
