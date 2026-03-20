@@ -1,69 +1,35 @@
+okay?
+
+```html
 <!doctype html>
 <html lang="en">
   <head>
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-2G9B72M9LT"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-2G9B72M9LT');
-    </script>
     <meta charset="UTF-8" />
-    <!-- Preconnect to Google Fonts for faster loading -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" onload="this.onload=null;this.rel='stylesheet'" />
-    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" /></noscript>
     <link rel="icon" type="image/png" sizes="32x32" href="/brandlogo.png" />
     <link rel="icon" type="image/png" sizes="16x16" href="/brandlogo.png" />
     <link rel="apple-touch-icon" sizes="180x180" href="/brandlogo.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>HYRX | Production Ready AI Agents & Automations</title>
-    <meta
-      name="description"
-      content="HYRX builds production-ready AI agents, workflow automations, and customer chat systems—designed for reliability, security, and measurable business outcomes."
-    />
+    <meta name="description" content="HYRX builds production-ready AI agents, workflow automations, and customer chat systems—designed for reliability, security, and measurable business outcomes." />
     <meta name="author" content="HYRX" />
+
     <meta property="og:title" content="HYRX | AI Agents & Automations" />
-    <meta
-      property="og:description"
-      content="Production ready AI agents & automations. Built for reliability, security, and measurable business outcomes."
-    />
+    <meta property="og:description" content="Production ready AI agents & automations. Built for reliability, security, and measurable business outcomes." />
     <meta property="og:type" content="website" />
     <meta property="og:image" content="/brandlogo.png" />
+
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="HYRX | AI Agents & Automations" />
     <meta name="twitter:description" content="Production ready AI agents & automations for modern teams" />
     <meta name="twitter:image" content="/brandlogo.png" />
+    
     <link rel="canonical" href="https://hyrx.tech" />
-
-    <!-- n8n Chat CSS — belongs in head -->
-    <link href="https://cdn.jsdelivr.net/npm/@n8n/chat/dist/chat.css" rel="stylesheet">
   </head>
+<script src="https://cdn.jsdelivr.net/npm/@n8n/chat/dist/chat.umd.js"></script>
   <body>
     <div id="root"></div>
-    <!-- reCAPTCHA loaded on-demand by Contact page -->
     <script type="module" src="/src/main.tsx"></script>
-
-    <!-- n8n Chat Widget — belongs just before </body> -->
-    <script src="https://cdn.jsdelivr.net/npm/@n8n/chat/dist/chat.umd.js"></script>
-    <script>
-      window.addEventListener('load', function() {
-        window.createChat({
-          webhookUrl: 'https://unbloodily-unsoldierlike-andrea.ngrok-free.dev/webhook/65afb57e-1c89-44a3-b9bb-84013a4511d7/chat',
-          mode: 'window',
-          chatInputKey: 'chatInput',
-          initialMessages: ['Hey Im Hyrx Assistant, How can I help you today?'],
-          i18n: {
-            en: {
-              title: 'Chat with Us',
-              subtitle: 'We reply instantly',
-              inputPlaceholder: 'Type your message...',
-            }
-          }
-        });
-      });
-    </script>
   </body>
 </html>
+
+```

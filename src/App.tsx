@@ -24,8 +24,33 @@ import AgentsPage from "./pages/agents/Agents";
 import AgentDetailPage from "./pages/agents/AgentDetail";
 import AgentFrameworkIndexPage from "./pages/agents/AgentFrameworkIndex";
 import AgentIndustryIndexPage from "./pages/agents/AgentIndustryIndex";
+import { useEffect } from 'react';
+import '@n8n/chat/style.css';
 
 const queryClient = new QueryClient();
+
+// ✅ Chat widget — separate component so useEffect works
+const ChatWidget = () => {
+  useEffect(() => {
+    import('@n8n/chat').then(({ createChat }) => {
+      createChat({
+        webhookUrl: 'https://unbloodily-unsoldierlike-andrea.ngrok-free.dev/webhook/65afb57e-1c89-44a3-b9bb-84013a4511d7/chat',
+        mode: 'window',
+        chatInputKey: 'chatInput',
+        initialMessages: ['Hi! How can I help you today?'],
+        i18n: {
+          en: {
+            title: 'HYRX Assistant',
+            subtitle: 'Ask me anything about our services',
+            inputPlaceholder: 'Type your message...',
+          }
+        }
+      });
+    });
+  }, []);
+
+  return null;
+};
 
 const App = () => (
   <HelmetProvider>
@@ -37,6 +62,8 @@ const App = () => (
           <ScrollToTop />
           <ThemeProvider>
             <SmoothScrollProvider>
+              {/* ✅ Add widget here — inside providers, outside Routes */}
+              <ChatWidget />
               <Routes>
                 <Route path="/" element={<Index />} />
                 <Route path="/services" element={<Services />} />
