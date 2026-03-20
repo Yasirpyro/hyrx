@@ -19,7 +19,14 @@ export function useTheme() {
 export function ThemeProvider({ children }: { children: ReactNode }) {
   const [theme, setTheme] = useState<Theme>(() => {
     if (typeof window !== "undefined") {
-      return (localStorage.getItem("hyrx-theme") as Theme) || "dark";
+      try {
+        const stored = localStorage.getItem("hyrx-theme");
+        if (stored === "dark" || stored === "light") {
+          return stored;
+        }
+      } catch {
+        // Ignore storage access errors (privacy mode / blocked storage).
+      }
     }
     return "dark";
   });
@@ -28,7 +35,11 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     const root = document.documentElement;
     root.classList.remove("dark", "light");
     root.classList.add(theme);
-    localStorage.setItem("hyrx-theme", theme);
+    try {
+      localStorage.setItem("hyrx-theme", theme);
+    } catch {
+      // Ignore storage write failures.
+    }
   }, [theme]);
 
   const toggleTheme = () => setTheme((t) => (t === "dark" ? "light" : "dark"));

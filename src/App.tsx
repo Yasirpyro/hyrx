@@ -32,21 +32,29 @@ const queryClient = new QueryClient();
 // ✅ Chat widget — separate component so useEffect works
 const ChatWidget = () => {
   useEffect(() => {
-    import('@n8n/chat').then(({ createChat }) => {
-      createChat({
-        webhookUrl: 'https://unbloodily-unsoldierlike-andrea.ngrok-free.dev/webhook/65afb57e-1c89-44a3-b9bb-84013a4511d7/chat',
-        mode: 'window',
-        chatInputKey: 'chatInput',
-        initialMessages: ['Hi! How can I help you today?'],
-        i18n: {
-          en: {
-            title: 'HYRX Assistant',
-            subtitle: 'Ask me anything about our services',
-            inputPlaceholder: 'Type your message...',
-          }
-        }
+    import('@n8n/chat')
+      .then(({ createChat }) => {
+        createChat({
+          webhookUrl: 'https://unbloodily-unsoldierlike-andrea.ngrok-free.dev/webhook/65afb57e-1c89-44a3-b9bb-84013a4511d7/chat',
+          mode: 'window',
+          chatInputKey: 'chatInput',
+          initialMessages: ['Hi! How can I help you today?'],
+          i18n: {
+            en: {
+              title: 'HYRX Assistant',
+              subtitle: 'Ask me anything about our services',
+              footer: '',
+              getStarted: 'Start chat',
+              inputPlaceholder: 'Type your message...',
+              closeButtonTooltip: 'Close chat',
+            },
+          },
+        });
+      })
+      .catch((error) => {
+        // Keep the app usable even if chat init fails in local/dev.
+        console.error('n8n chat initialization failed:', error);
       });
-    });
   }, []);
 
   return null;

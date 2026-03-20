@@ -7,10 +7,25 @@ const SUPABASE_PUBLISHABLE_DEFAULT_KEY =
   import.meta.env.VITE_SUPABASE_PUBLISHABLE_DEFAULT_KEY ||
   import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
 
+const hasSupabaseEnv = Boolean(SUPABASE_URL && SUPABASE_PUBLISHABLE_DEFAULT_KEY);
+
+// Keep the app bootable in local/dev even when env vars are missing.
+const FALLBACK_SUPABASE_URL = 'https://placeholder.supabase.co';
+const FALLBACK_SUPABASE_KEY = 'placeholder-anon-key';
+
+const resolvedSupabaseUrl = SUPABASE_URL || FALLBACK_SUPABASE_URL;
+const resolvedSupabaseKey = SUPABASE_PUBLISHABLE_DEFAULT_KEY || FALLBACK_SUPABASE_KEY;
+
+if (!hasSupabaseEnv && import.meta.env.DEV) {
+  console.warn(
+    '[HYRX] Missing Supabase env vars. Set VITE_SUPABASE_URL and VITE_SUPABASE_PUBLISHABLE_KEY in .env.local.'
+  );
+}
+
 // Import the supabase client like this:
 // import { supabase } from "@/integrations/supabase/client";
 
-export const supabase = createClient<Database>(SUPABASE_URL, SUPABASE_PUBLISHABLE_DEFAULT_KEY, {
+export const supabase = createClient<Database>(resolvedSupabaseUrl, resolvedSupabaseKey, {
   auth: {
     storage: localStorage,
     persistSession: true,
