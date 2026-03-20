@@ -1,8 +1,13 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+/* Google Fonts loaded via index.html with preconnect for performance */
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Hide reCAPTCHA badge */
+.grecaptcha-badge {
+  visibility: hidden !important;
+}
 
 /* Lenis smooth scroll base styles */
 html.lenis,
@@ -84,6 +89,57 @@ html.lenis body {
     --sidebar-accent-foreground: 210 40% 98%;
     --sidebar-border: 230 20% 18%;
     --sidebar-ring: 190 100% 45%;
+  }
+
+  /* Global light theme */
+  .light {
+    --background: 0 0% 98%;
+    --foreground: 230 15% 15%;
+    
+    --card: 0 0% 100%;
+    --card-foreground: 230 15% 15%;
+    
+    --popover: 0 0% 100%;
+    --popover-foreground: 230 15% 15%;
+    
+    --primary: 190 100% 32%;
+    --primary-foreground: 0 0% 100%;
+    
+    --secondary: 260 20% 93%;
+    --secondary-foreground: 260 30% 30%;
+    
+    --muted: 220 14% 94%;
+    --muted-foreground: 220 10% 42%;
+    
+    --accent: 320 80% 48%;
+    --accent-foreground: 0 0% 100%;
+    
+    --destructive: 0 84% 50%;
+    --destructive-foreground: 0 0% 100%;
+    
+    --border: 220 13% 87%;
+    --input: 220 13% 87%;
+    --ring: 190 100% 32%;
+    
+    /* Custom tokens - light */
+    --glow-primary: 190 100% 40%;
+    --glow-accent: 320 80% 55%;
+    --gradient-start: 190 100% 32%;
+    --gradient-end: 320 80% 48%;
+    
+    /* Glass effect - light */
+    --glass-bg: 0 0% 100% / 0.85;
+    --glass-border: 220 13% 87% / 0.6;
+    
+    /* Sidebar - light */
+    --sidebar-background: 0 0% 97%;
+    --sidebar-foreground: 230 15% 15%;
+    --sidebar-primary: 190 100% 32%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 220 14% 94%;
+    --sidebar-accent-foreground: 230 15% 15%;
+    --sidebar-border: 220 13% 87%;
+    --sidebar-ring: 190 100% 32%;
   }
 }
 

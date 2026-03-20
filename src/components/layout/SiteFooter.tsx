@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { ArrowUpRight } from "lucide-react";
+import { useTheme } from "@/components/providers/ThemeProvider";
 
 const footerLinks = {
   services: [
@@ -8,6 +9,7 @@ const footerLinks = {
     { label: "3D & AR Modelling", href: "/services/3d-ar-modelling" },
   ],
   company: [
+    { label: "Agent Library", href: "/agents" },
     { label: "About", href: "/about" },
     { label: "Work", href: "/work" },
     { label: "Contact", href: "/contact" },
@@ -19,35 +21,33 @@ const footerLinks = {
 };
 
 export function SiteFooter() {
+  const { theme } = useTheme();
   return (
-    <footer className="border-t border-border/50 bg-card/30">
+    <footer id="site-footer" className="border-t border-border/50 bg-card/30">
       <div className="container-main section-sm">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-12">
           <div className="lg:col-span-1">
             <Link to="/" className="flex items-center gap-3 mb-4">
-              <img
-                src="/brandlogo.webp"
-                alt="HYRX Logo"
-                className="w-10 h-10 rounded-lg object-contain"
+              <img src="/brandlogo.webp" alt="HYRX Logo" className="w-10 h-10 rounded-lg object-contain"
+                style={{ filter: theme === 'light' ? 'drop-shadow(0 0 0.5px rgba(0,0,0,0.7)) drop-shadow(0 0 0.5px rgba(0,0,0,0.7)) drop-shadow(0 0 0.5px rgba(0,0,0,0.7))' : undefined }}
               />
               <div className="flex flex-col">
-                <span className="text-xl font-bold text-foreground leading-tight">
-                  HYRX
-                </span>
+                <span className="text-xl font-bold text-foreground leading-tight">HYRX</span>
                 <span className="text-[10px] font-light text-foreground/70 tracking-[0.2em] uppercase leading-tight">
                   AI studio
                 </span>
               </div>
             </Link>
             <p className="text-body text-sm max-w-xs">
-              Production ready AI agents & automations. Built for reliability, security, and measurable business outcomes.
+              Production ready AI agents & automations. Built for reliability, security, and measurable business
+              outcomes.
             </p>
             <div className="mt-6">
               <a
-                href="mailto:hyrx.aistudio@gmail.com"
+                href="mailto:contact@hyrx.tech"
                 className="inline-flex items-center gap-1 text-primary hover:text-primary/80 transition-colors text-sm font-medium"
               >
-                hyrx.aistudio@gmail.com
+                contact@hyrx.tech
                 <ArrowUpRight className="w-4 h-4" />
               </a>
             </div>
@@ -55,9 +55,7 @@ export function SiteFooter() {
 
           {/* Services */}
           <div>
-            <h4 className="text-sm font-semibold text-foreground mb-4 uppercase tracking-wider">
-              Services
-            </h4>
+            <h4 className="text-sm font-semibold text-foreground mb-4 uppercase tracking-wider">Services</h4>
             <ul className="space-y-3">
               {footerLinks.services.map((link) => (
                 <li key={link.href}>
@@ -74,9 +72,7 @@ export function SiteFooter() {
 
           {/* Company */}
           <div>
-            <h4 className="text-sm font-semibold text-foreground mb-4 uppercase tracking-wider">
-              Company
-            </h4>
+            <h4 className="text-sm font-semibold text-foreground mb-4 uppercase tracking-wider">Company</h4>
             <ul className="space-y-3">
               {footerLinks.company.map((link) => (
                 <li key={link.href}>
@@ -93,9 +89,7 @@ export function SiteFooter() {
 
           {/* Legal */}
           <div>
-            <h4 className="text-sm font-semibold text-foreground mb-4 uppercase tracking-wider">
-              Legal
-            </h4>
+            <h4 className="text-sm font-semibold text-foreground mb-4 uppercase tracking-wider">Legal</h4>
             <ul className="space-y-3">
               {footerLinks.legal.map((link) => (
                 <li key={link.href}>
@@ -113,12 +107,10 @@ export function SiteFooter() {
 
         {/* Bottom Bar */}
         <div className="mt-12 pt-8 border-t border-border/50 flex flex-col sm:flex-row justify-between items-center gap-4">
-          <p className="text-muted-foreground text-sm">
-            © {new Date().getFullYear()} HYRX. All rights reserved.
-          </p>
+          <p className="text-muted-foreground text-sm">© {new Date().getFullYear()} HYRX. All rights reserved.</p>
           <div className="flex items-center gap-6">
             <a
-              href="https://twitter.com"
+              href="https://x.com/HyrxAistudio"
               target="_blank"
               rel="noopener noreferrer"
               className="text-muted-foreground hover:text-foreground transition-colors text-sm"
@@ -126,7 +118,7 @@ export function SiteFooter() {
               Twitter
             </a>
             <a
-              href="https://linkedin.com"
+              href="https://www.linkedin.com/in/hyrx-ai-studio/"
               target="_blank"
               rel="noopener noreferrer"
               className="text-muted-foreground hover:text-foreground transition-colors text-sm"
@@ -134,12 +126,12 @@ export function SiteFooter() {
               LinkedIn
             </a>
             <a
-              href="https://github.com"
+              href="https://www.instagram.com/hyrx.aistudio/"
               target="_blank"
               rel="noopener noreferrer"
               className="text-muted-foreground hover:text-foreground transition-colors text-sm"
             >
-              GitHub
+              Instagram
             </a>
           </div>
         </div>

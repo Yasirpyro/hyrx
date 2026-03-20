@@ -11,6 +11,18 @@ node_modules
 dist
 dist-ssr
 *.local
+bun.lockb
+.agents/
+migrations/
+
+
+# Environment files (secrets)
+.env
+.env.*
+!.env.example
+supabase/.env
+supabase/functions/.env
+.supabase/
 
 # Editor directories and files
 .vscode/*

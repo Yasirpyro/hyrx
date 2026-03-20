@@ -5,6 +5,20 @@ import { Button } from "@/components/ui/button";
 import { GradientButton } from "@/components/ui/gradient-button";
 import { Section, SectionHeader, Reveal, StaggerContainer, StaggerItem } from "@/components/ui/Section";
 import { FeatureCard } from "@/components/ui/Cards";
+import { SEO } from "@/components/SEO";
+
+const serviceSchema = {
+  "@context": "https://schema.org",
+  "@type": "Service",
+  "name": "Custom AI Chatbots",
+  "provider": {
+    "@type": "Organization",
+    "name": "HYRX"
+  },
+  "description": "Custom AI assistants that qualify leads, answer questions, and route requests with built-in safety guardrails and seamless human handoff.",
+  "serviceType": "AI Chatbot Development",
+  "areaServed": "Worldwide"
+};
 
 const deliverables = [
   "Custom-trained chatbot with your knowledge base",
@@ -48,6 +62,11 @@ const process = [
 export default function ServiceChatbots() {
   return (
     <Layout>
+      <SEO
+        title="Custom AI Chatbots"
+        description="Custom AI assistants that qualify leads, answer questions, and route requests with built-in safety guardrails and seamless human handoff."
+        schema={serviceSchema}
+      />
       {/* Hero */}
       <section className="pt-32 pb-16 sm:pt-40 sm:pb-20">
         <div className="container-main">

@@ -5,6 +5,20 @@ import { Button } from "@/components/ui/button";
 import { GradientButton } from "@/components/ui/gradient-button";
 import { Section, SectionHeader, Reveal, StaggerContainer, StaggerItem } from "@/components/ui/Section";
 import { FeatureCard } from "@/components/ui/Cards";
+import { SEO } from "@/components/SEO";
+
+const serviceSchema = {
+  "@context": "https://schema.org",
+  "@type": "Service",
+  "name": "3D & AR Modelling Services",
+  "provider": {
+    "@type": "Organization",
+    "name": "HYRX"
+  },
+  "description": "Optimized 3D models and AR experiences that load fast, look stunning, and work seamlessly across devices.",
+  "serviceType": "3D Modelling and AR Development",
+  "areaServed": "Worldwide"
+};
 
 const deliverables = [
   "Production-ready 3D models (glTF/GLB format)",
@@ -48,6 +62,11 @@ const process = [
 export default function Service3DAR() {
   return (
     <Layout>
+      <SEO
+        title="3D & AR Modelling Services"
+        description="Optimized 3D models and AR experiences that load fast, look stunning, and work seamlessly across devices for web and mobile."
+        schema={serviceSchema}
+      />
       {/* Hero */}
       <section className="pt-32 pb-16 sm:pt-40 sm:pb-20">
         <div className="container-main">

@@ -1,9 +1,14 @@
 import { Layout } from "@/components/layout/Layout";
 import { Section, Reveal } from "@/components/ui/Section";
+import { SEO } from "@/components/SEO";
 
 export default function Terms() {
   return (
     <Layout>
+      <SEO
+        title="Terms of Service"
+        description="HYRX terms of service. Understand our service agreements, intellectual property, and payment terms."
+      />
       <section className="pt-32 pb-16 sm:pt-40 sm:pb-20">
         <div className="container-main">
           <div className="max-w-3xl">

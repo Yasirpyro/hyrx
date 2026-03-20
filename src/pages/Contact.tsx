@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Layout } from "@/components/layout/Layout";
 import { Section, Reveal } from "@/components/ui/Section";
 import { Button } from "@/components/ui/button";
@@ -10,22 +10,26 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useToast } from "@/hooks/use-toast";
 import { Mail, MapPin, Send, Loader2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import { SEO } from "@/components/SEO";
 
 const services = [
   { id: "ai-agents", label: "AI Agents & Automations" },
   { id: "chatbots", label: "Custom AI Chatbots" },
   { id: "3d-ar", label: "3D & AR Modelling" },
+  { id: "other", label: "Other" },
 ];
 
 const budgetRanges = [
+  { value: "1k-5k", label: "$1,000 - $5,000" },
+  { value: "5k-15k", label: "$5,000 - $15,000" },
   { value: "15k-30k", label: "$15,000 - $30,000" },
-  { value: "30k-50k", label: "$30,000 - $50,000" },
-  { value: "50k-100k", label: "$50,000 - $100,000" },
-  { value: "100k+", label: "$100,000+" },
+  { value: "50k+", label: "$50,000+" },
   { value: "not-sure", label: "Not sure yet" },
 ];
 
 export default function Contact() {
+  // Public site key (ID) — NOT the secret key
+  const recaptchaSiteKey = "6LfONTwsAAAAANWWtBiaTd34TbaP0_Vx7qUf-GiY";
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState({
@@ -46,19 +50,74 @@ export default function Contact() {
     }));
   };
 
+  // Lazy-load reCAPTCHA script when Contact page mounts
+  useEffect(() => {
+    const scriptId = "hyrx-recaptcha-enterprise";
+    const src = `https://www.google.com/recaptcha/enterprise.js?render=${encodeURIComponent(recaptchaSiteKey)}`;
+    const existing = document.getElementById(scriptId) as HTMLScriptElement | null;
+
+    if (existing) {
+      if (existing.src !== src) {
+        existing.src = src;
+      }
+      return;
+    }
+
+    const script = document.createElement("script");
+    script.id = scriptId;
+    script.src = src;
+    script.async = true;
+    script.defer = true;
+    document.body.appendChild(script);
+  }, [recaptchaSiteKey]);
+
+  const getRecaptchaToken = (action: string) =>
+    new Promise<string>((resolve, reject) => {
+      const grecaptchaAny = (window as any).grecaptcha;
+      const api = grecaptchaAny?.enterprise;
+
+      if (!api || typeof api.ready !== "function" || typeof api.execute !== "function") {
+        reject(new Error("reCAPTCHA Enterprise not loaded"));
+        return;
+      }
+
+      const timeout = window.setTimeout(() => {
+        reject(new Error("reCAPTCHA timeout"));
+      }, 8000);
+
+      api.ready(() => {
+        try {
+          Promise.resolve(api.execute(recaptchaSiteKey, { action }))
+            .then((token: string) => {
+              window.clearTimeout(timeout);
+              resolve(token);
+            })
+            .catch((err: unknown) => {
+              window.clearTimeout(timeout);
+              reject(err);
+            });
+        } catch (err) {
+          window.clearTimeout(timeout);
+          reject(err);
+        }
+      });
+    });
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
 
     try {
+      // Get reCAPTCHA v3 token
+      const recaptchaToken = await getRecaptchaToken("contact_form");
+
       const { data, error } = await supabase.functions.invoke("send-contact-email", {
-        body: formData,
+        body: { ...formData, recaptchaToken },
       });
 
       if (error) throw error;
 
-      // Handle graceful response from edge function
-      if (data?.success) {
+      if (data?.success === true) {
         toast({
           title: "Message sent!",
           description: "We'll get back to you within 1-2 business days.",
@@ -71,28 +130,44 @@ export default function Contact() {
           budget: "",
           message: "",
         });
-      } else {
-        // Edge function returned success:false but no 500 error
+        return;
+      }
+
+      if (typeof data?.error === "string" && data.error.trim().length > 0) {
         toast({
-          title: "Request received",
-          description: "Thanks! If you don't hear back soon, email us at hyrx.aistudio@gmail.com",
+          title: "Couldn't send",
+          description: data.error,
+          variant: "destructive",
         });
-        setFormData({
-          name: "",
-          email: "",
-          company: "",
-          services: [],
-          budget: "",
-          message: "",
+        return;
+      }
+
+      // Fallback: request accepted but some non-critical part failed
+      toast({
+        title: "Request received",
+        description: "Thanks! If you don't hear back soon, email us at contact@hyrx.tech",
+      });
+    } catch (error: any) {
+      const message = (error?.message || "").toString();
+      console.error("Error sending message:", error);
+
+      if (
+        message.toLowerCase().includes("recaptcha") ||
+        message.toLowerCase().includes("invalid site key")
+      ) {
+        toast({
+          title: "Spam protection error",
+          description:
+            "reCAPTCHA is failing on this domain. Add hyrx.tech to the allowed domains for your reCAPTCHA v3 key (or generate a new key), then try again.",
+          variant: "destructive",
+        });
+      } else {
+        toast({
+          title: "Something went wrong",
+          description: "Please email us directly at contact@hyrx.tech",
+          variant: "destructive",
         });
       }
-    } catch (error: any) {
-      console.error("Error sending message:", error);
-      toast({
-        title: "Something went wrong",
-        description: "Please email us directly at hyrx.aistudio@gmail.com",
-        variant: "destructive",
-      });
     } finally {
       setIsSubmitting(false);
     }
@@ -100,6 +175,14 @@ export default function Contact() {
 
   return (
     <Layout>
+      <SEO
+        title="Contact Us — Request a Quote"
+        description="Get in touch with HYRX. Request a quote for AI agents, chatbots, or 3D/AR projects. We respond within 1-2 business days."
+        breadcrumbs={[
+          { name: "Home", url: "https://hyrx.tech/" },
+          { name: "Contact", url: "https://hyrx.tech/contact" },
+        ]}
+      />
       {/* Hero */}
       <section className="pt-32 pb-16 sm:pt-40 sm:pb-20">
         <div className="container-main">
@@ -117,7 +200,7 @@ export default function Contact() {
             </Reveal>
             <Reveal delay={0.2}>
               <p className="text-body-lg">
-                Tell us about your project and we'll get back to you with a detailed proposal within 1-2 business days.
+                Tell us about your project and we'll get back to you ASAP with a detailed proposal.
               </p>
             </Reveal>
           </div>
@@ -141,8 +224,8 @@ export default function Contact() {
                   </div>
                   <div>
                     <h3 className="font-medium text-foreground mb-1">Email</h3>
-                    <a href="mailto:hyrx.aistudio@gmail.com" className="text-muted-foreground hover:text-primary transition-colors">
-                      hyrx.aistudio@gmail.com
+                    <a href="mailto:contact@hyrx.tech" className="text-muted-foreground hover:text-primary transition-colors">
+                      contact@hyrx.tech
                     </a>
                   </div>
                 </div>
@@ -165,9 +248,9 @@ export default function Contact() {
             
             <Reveal delay={0.3}>
               <div className="mt-10 p-6 rounded-xl bg-card border border-border/50">
-                <h3 className="font-medium text-foreground mb-2">Response time</h3>
+                <h3 className="font-medium text-foreground mb-2">Quick response</h3>
                 <p className="text-sm text-muted-foreground">
-                  We typically respond within 1-2 business days. For urgent inquiries, please mention it in your message.
+                  We'll respond to you ASAP. For urgent projects, just let us know in your message.
                 </p>
               </div>
             </Reveal>
@@ -266,7 +349,7 @@ export default function Contact() {
                   />
                 </div>
 
-                <Button type="submit" variant="hero" size="lg" disabled={isSubmitting} className="w-full sm:w-auto">
+                <Button type="submit" size="lg" disabled={isSubmitting} className="w-full sm:w-auto">
                   {isSubmitting ? (
                     <>
                       <Loader2 className="w-5 h-5 animate-spin" />

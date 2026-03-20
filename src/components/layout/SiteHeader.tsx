@@ -1,9 +1,10 @@
 import { useState, useEffect, useRef } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, ChevronDown, Box, Cpu, Bot } from "lucide-react";
+import { Menu, X, ChevronDown, Box, Cpu, Bot, Sun, Moon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { GradientButton } from "@/components/ui/gradient-button";
+import { useTheme } from "@/components/providers/ThemeProvider";
 import { cn } from "@/lib/utils";
 
 const serviceLinks = [
@@ -29,7 +30,9 @@ const serviceLinks = [
 
 const navLinks = [
   { href: "/services", label: "Services", hasDropdown: true },
+  { href: "/agents", label: "Agent Library" },
   { href: "/work", label: "Work" },
+  { href: "/blog", label: "Blog" },
   { href: "/about", label: "About" },
   { href: "/contact", label: "Contact" },
 ];
@@ -40,6 +43,7 @@ export function SiteHeader() {
   const [isServicesOpen, setIsServicesOpen] = useState(false);
   const servicesRef = useRef<HTMLDivElement>(null);
   const location = useLocation();
+  const { theme, toggleTheme } = useTheme();
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 20);
@@ -78,6 +82,7 @@ export function SiteHeader() {
             src="/brandlogo.webp"
             alt="HYRX Logo"
             className="w-10 h-10 rounded-lg object-contain"
+            style={{ filter: theme === 'light' ? 'drop-shadow(0 0 0.5px rgba(0,0,0,0.7)) drop-shadow(0 0 0.5px rgba(0,0,0,0.7)) drop-shadow(0 0 0.5px rgba(0,0,0,0.7))' : undefined }}
           />
           <div className="flex flex-col">
             <span className="text-xl font-bold text-foreground leading-tight">
@@ -178,12 +183,20 @@ export function SiteHeader() {
           ))}
         </div>
 
-        {/* CTA + Mobile Toggle */}
-        <div className="flex items-center gap-3">
+        {/* Theme Toggle + CTA + Mobile Toggle */}
+        <div className="flex items-center gap-2">
+          <button
+            onClick={toggleTheme}
+            className="p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
+            aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} mode`}
+          >
+            {theme === "dark" ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+          </button>
+
           <GradientButton
             to="/contact"
             height="38px"
-            className="hidden sm:inline-flex text-sm"
+            className="hidden sm:inline-flex text-sm whitespace-nowrap"
           >
             Request a Quote
           </GradientButton>

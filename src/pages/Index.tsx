@@ -34,6 +34,54 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { SEO } from "@/components/SEO";
+
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What are typical project timelines?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Most projects range from 3-8 weeks depending on complexity. 3D/AR models typically take 4-6 weeks, AI chatbots 3-5 weeks, and complex agent workflows 5-8 weeks."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is the pricing range for your services?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Projects typically start at $15,000 for focused deliverables. Complex enterprise solutions range from $50,000-$150,000+."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do you handle data privacy and security?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "We follow industry best practices including encryption at rest and in transit, secure API integrations, and compliance with GDPR and CCPA where applicable."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Who owns the final deliverables and code?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "You retain full ownership of all custom code, models, and assets we create for your project."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What ongoing support do you offer?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "We offer flexible support packages including bug fixes, model retraining, performance monitoring, and feature updates."
+      }
+    }
+  ]
+};
 
 const services = [
   {
@@ -145,6 +193,11 @@ const faqs = [
 export default function Services() {
   return (
     <Layout>
+      <SEO
+        title="Production Ready AI Agents & Automations"
+        description="HYRX builds production-ready AI agents, workflow automations, and customer chat systems designed for reliability, security, and measurable business outcomes."
+        schema={faqSchema}
+      />
       {/* Hero Section */}
       <section className="relative min-h-[calc(100vh-80px)] flex items-center py-16 lg:py-20 overflow-hidden">
         <div className="container-main">
