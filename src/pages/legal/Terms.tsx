@@ -70,7 +70,7 @@ export default function Terms() {
             <h2>7. Contact</h2>
             <p>
               For questions about these Terms of Service, please contact us at{" "}
-              <a href="mailto:hello@example.com">hello@example.com</a>.
+              <a href="mailto:contact@hyrx.tech">contact@hyrx.tech</a>.
             </p>
           </Reveal>
         </div>

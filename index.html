@@ -9,22 +9,41 @@
     <title>HYRX | Production Ready AI Agents & Automations</title>
     <meta name="description" content="HYRX builds production-ready AI agents, workflow automations, and customer chat systems—designed for reliability, security, and measurable business outcomes." />
     <meta name="author" content="HYRX" />
-
     <meta property="og:title" content="HYRX | AI Agents & Automations" />
     <meta property="og:description" content="Production ready AI agents & automations. Built for reliability, security, and measurable business outcomes." />
     <meta property="og:type" content="website" />
     <meta property="og:image" content="/brandlogo.png" />
-
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="HYRX | AI Agents & Automations" />
     <meta name="twitter:description" content="Production ready AI agents & automations for modern teams" />
     <meta name="twitter:image" content="/brandlogo.png" />
-    
     <link rel="canonical" href="https://hyrx.tech" />
-  </head>
 
+    <!-- n8n Chat CSS — belongs in head -->
+    <link href="https://cdn.jsdelivr.net/npm/@n8n/chat/dist/chat.css" rel="stylesheet">
+  </head>
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
+
+    <!-- n8n Chat Widget — belongs just before </body> -->
+    <script src="https://cdn.jsdelivr.net/npm/@n8n/chat/dist/chat.umd.js"></script>
+    <script>
+      window.addEventListener('load', function() {
+        window.createChat({
+          webhookUrl: 'https://unbloodily-unsoldierlike-andrea.ngrok-free.dev/webhook/65afb57e-1c89-44a3-b9bb-84013a4511d7/chat',
+          mode: 'window',
+          chatInputKey: 'chatInput',
+          initialMessages: ['Hey Im Hyrx Assistant, How can I help you today?'],
+          i18n: {
+            en: {
+              title: 'Chat with Us',
+              subtitle: 'We reply instantly',
+              inputPlaceholder: 'Type your message...',
+            }
+          }
+        });
+      });
+    </script>
   </body>
 </html>
